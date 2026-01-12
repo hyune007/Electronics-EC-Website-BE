@@ -1,30 +1,33 @@
 CREATE DATABASE IF NOT EXISTS Poly_UBs;
 USE Poly_UBs;
 
+
+
+
 -- 1. Independent Tables
 
-create table Role
+create table vaitro
 (
-    role_id   VARCHAR(20)  NOT NULL,
-    role_name VARCHAR(100) NOT NULL,
-    PRIMARY KEY (role_id)
+    vaitro_id   VARCHAR(20)  NOT NULL,
+    vaitro_name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (vaitro_id)
 );
 
-create table LoaiSanPham
+create table loaisanpham
 (
     lsp_id   VARCHAR(20)  NOT NULL,
     lsp_name VARCHAR(100) NOT NULL,
     PRIMARY KEY (lsp_id)
 );
 
-CREATE TABLE Hang
+CREATE TABLE hang
 (
     hang_id   VARCHAR(10) NOT NULL,
     hang_name VARCHAR(50) NOT NULL UNIQUE,
     PRIMARY KEY (hang_id)
 );
 
-create table KhuyenMai
+create table khuyenmai
 (
     km_id          VARCHAR(8)   NOT NULL,
     km_name        VARCHAR(100) NOT NULL,
@@ -37,7 +40,7 @@ create table KhuyenMai
 
 -- 2. Tables with Dependencies
 
-create table KhachHang
+create table khachhang
 (
     kh_id       VARCHAR(8)   NOT NULL,
     kh_name     VARCHAR(100) NOT NULL,
@@ -46,10 +49,10 @@ create table KhachHang
     kh_mail     VARCHAR(50)  NOT NULL,
     kh_role     varchar(20)  NOT NULL,
     PRIMARY KEY (kh_id),
-    FOREIGN KEY (kh_role) REFERENCES Role (role_id)
+    FOREIGN KEY (kh_role) REFERENCES vaitro (vaitro_id)
 );
 
-create table NhanVien
+create table nhanvien
 (
     nv_id       VARCHAR(8)   NOT NULL,
     nv_name     VARCHAR(100) NOT NULL,
@@ -60,10 +63,10 @@ create table NhanVien
     nv_role     VARCHAR(20)  NOT NULL,
     nv_birth    DATE         NOT NULL,
     PRIMARY KEY (nv_id),
-    FOREIGN KEY (nv_role) REFERENCES Role (role_id)
+    FOREIGN KEY (nv_role) REFERENCES vaitro (vaitro_id)
 );
 
-create table DiaChi
+create table diachi
 (
     dc_id            VARCHAR(8)   NOT NULL,
     kh_id            VARCHAR(8)   NOT NULL,
@@ -72,10 +75,10 @@ create table DiaChi
     dc_detailaddress VARCHAR(255) NOT NULL,
     dc_is_default    TINYINT(1)   NOT NULL DEFAULT 0,
     PRIMARY KEY (dc_id),
-    FOREIGN KEY (kh_id) REFERENCES KhachHang (kh_id)
+    FOREIGN KEY (kh_id) REFERENCES khachhang (kh_id)
 );
 
-create table SanPham
+create table sanpham
 (
     sp_id          VARCHAR(8)   NOT NULL,
     sp_name        VARCHAR(100) NOT NULL,
@@ -86,23 +89,23 @@ create table SanPham
     sp_stock       INT          NOT NULL,
     sp_brand_id    VARCHAR(50)  NOT NULL,
     PRIMARY KEY (sp_id),
-    FOREIGN KEY (sp_brand_id) REFERENCES Hang (hang_id),
-    FOREIGN KEY (sp_category_id) REFERENCES LoaiSanPham (lsp_id)
+    FOREIGN KEY (sp_brand_id) REFERENCES hang (hang_id),
+    FOREIGN KEY (sp_category_id) REFERENCES loaisanpham (lsp_id)
 );
 
-CREATE TABLE GioHang
+CREATE TABLE giohang
 (
     gh_id       VARCHAR(8) NOT NULL,
     sp_quantity INT        NOT NULL,
     kh_id       VARCHAR(8) NOT NULL,
     sp_id       VARCHAR(8) NOT NULL,
     PRIMARY KEY (gh_id),
-    FOREIGN KEY (kh_id) REFERENCES KhachHang (kh_id),
-    FOREIGN KEY (sp_id) REFERENCES SanPham (sp_id),
+    FOREIGN KEY (kh_id) REFERENCES khachhang (kh_id),
+    FOREIGN KEY (sp_id) REFERENCES sanpham (sp_id),
     UNIQUE KEY unique_customer_product (kh_id, sp_id)
 );
 
-create table HoaDon
+create table hoadon
 (
     hd_id          VARCHAR(8)   NOT NULL,
     hd_date        DATETIME     NOT NULL,
@@ -112,12 +115,12 @@ create table HoaDon
     dc_id          VARCHAR(8)   NOT NULL,
     payment_method VARCHAR(255) NOT NULL,
     PRIMARY KEY (hd_id),
-    FOREIGN KEY (kh_id) REFERENCES KhachHang (kh_id),
-    FOREIGN KEY (nv_id) REFERENCES NhanVien (nv_id),
-    FOREIGN KEY (dc_id) REFERENCES DiaChi (dc_id)
+    FOREIGN KEY (kh_id) REFERENCES khachhang (kh_id),
+    FOREIGN KEY (nv_id) REFERENCES nhanvien (nv_id),
+    FOREIGN KEY (dc_id) REFERENCES diachi (dc_id)
 );
 
-create table ChiTietHoaDon
+create table chitiethoadon
 (
     hdct_id    VARCHAR(8) NOT NULL,
     hd_id      VARCHAR(8) NOT NULL,
@@ -125,21 +128,21 @@ create table ChiTietHoaDon
     quantity   INT        NOT NULL,
     hdct_total INT        NOT NULL,
     PRIMARY KEY (hdct_id),
-    FOREIGN KEY (hd_id) REFERENCES HoaDon (hd_id),
-    FOREIGN KEY (sp_id) REFERENCES SanPham (sp_id)
+    FOREIGN KEY (hd_id) REFERENCES hoadon (hd_id),
+    FOREIGN KEY (sp_id) REFERENCES sanpham (sp_id)
 );
 
-create table NhapKho
+create table nhapkho
 (
     nk_id       VARCHAR(8) NOT NULL,
     nk_quantity INT        NOT NULL,
     sp_id       VARCHAR(8) NOT NULL,
     nk_date     DATE       NOT NULL,
     PRIMARY KEY (nk_id),
-    FOREIGN KEY (sp_id) REFERENCES SanPham (sp_id)
+    FOREIGN KEY (sp_id) REFERENCES sanpham (sp_id)
 );
 
-create table DanhGia
+create table danhgia
 (
     dg_id      VARCHAR(8)   NOT NULL,
     dg_content VARCHAR(100) NOT NULL,
@@ -148,8 +151,8 @@ create table DanhGia
     kh_id      VARCHAR(8)   NOT NULL,
     dg_date    DATE         NOT NULL,
     PRIMARY KEY (dg_id),
-    FOREIGN KEY (sp_id) REFERENCES SanPham (sp_id),
-    FOREIGN KEY (kh_id) REFERENCES KhachHang (kh_id)
+    FOREIGN KEY (sp_id) REFERENCES sanpham (sp_id),
+    FOREIGN KEY (kh_id) REFERENCES khachhang (kh_id)
 );
 
 CREATE TABLE password_reset_tokens
@@ -158,7 +161,7 @@ CREATE TABLE password_reset_tokens
     token       VARCHAR(255) NOT NULL UNIQUE,
     kh_id       VARCHAR(8)   NOT NULL,
     expiry_date DATETIME     NOT NULL,
-    FOREIGN KEY (kh_id) REFERENCES KhachHang (kh_id) ON DELETE CASCADE
+    FOREIGN KEY (kh_id) REFERENCES khachhang (kh_id) ON DELETE CASCADE
 );
 
 CREATE INDEX idx_token ON password_reset_tokens (token);
@@ -167,13 +170,13 @@ CREATE INDEX idx_expiry_date ON password_reset_tokens (expiry_date);
 -- 3. Insert Data
 
 -- Role
-insert into Role (role_id, role_name)
+insert into vaitro (vaitro_id, vaitro_name)
 values ('ROLE_ADMIN', 'Quản trị viên'),
        ('ROLE_EMPLOYEE', 'Nhân viên'),
        ('ROLE_CUSTOMER', 'Khách hàng');
 
 -- Hang
-INSERT INTO Hang (hang_id, hang_name)
+INSERT INTO hang (hang_id, hang_name)
 VALUES ('H01', 'Apple'),
        ('H02', 'Samsung'),
        ('H03', 'Google'),
@@ -259,7 +262,7 @@ VALUES ('H01', 'Apple'),
        ('H83', 'KEF');
 
 -- LoaiSanPham (10 categories)
-INSERT INTO LoaiSanPham (lsp_id, lsp_name)
+INSERT INTO loaisanpham (lsp_id, lsp_name)
 VALUES ('LSP01', 'Điện thoại'),
        ('LSP02', 'Laptop'),
        ('LSP03', 'Máy tính bảng'),
@@ -273,7 +276,7 @@ VALUES ('LSP01', 'Điện thoại'),
 
 -- SanPham (200 products)
 -- Điện thoại (20)
-INSERT INTO SanPham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
+INSERT INTO sanpham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
 VALUES ('SP001', 'iPhone 14 Pro Max', 25000000, 'Điện thoại cao cấp từ Apple', 'SP001.jpg', 'LSP01', 50, 'H01'),
        ('SP002', 'Samsung Galaxy S23 Ultra', 23000000, 'Flagship của Samsung', 'SP002.jpg', 'LSP01', 40, 'H02'),
        ('SP003', 'Google Pixel 7 Pro', 20000000, 'Chụp ảnh đỉnh cao', 'SP003.jpg', 'LSP01', 30, 'H03'),
@@ -296,7 +299,7 @@ VALUES ('SP001', 'iPhone 14 Pro Max', 25000000, 'Điện thoại cao cấp từ 
        ('SP020', 'Xiaomi 12T', 11000000, 'Hiệu năng tốt trong tầm giá', 'SP020.jpg', 'LSP01', 75, 'H04');
 
 -- Laptop (20)
-INSERT INTO SanPham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
+INSERT INTO sanpham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
 VALUES ('SP021', 'MacBook Pro 16 M2', 60000000, 'Laptop cho dân chuyên nghiệp', 'SP021.jpg', 'LSP02', 30, 'H01'),
        ('SP022', 'Dell XPS 15', 45000000, 'Thiết kế đẹp, màn hình vô cực', 'SP022.jpg', 'LSP02', 40, 'H12'),
        ('SP023', 'HP Spectre x360', 38000000, 'Laptop 2-in-1 cao cấp', 'SP023.jpg', 'LSP02', 25, 'H13'),
@@ -320,7 +323,7 @@ VALUES ('SP021', 'MacBook Pro 16 M2', 60000000, 'Laptop cho dân chuyên nghiệ
        ('SP040', 'Lenovo Legion 5', 32000000, 'Hiệu năng/giá thành tốt', 'SP040.jpg', 'LSP02', 90, 'H14');
 
 -- Máy tính bảng (20)
-INSERT INTO SanPham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
+INSERT INTO sanpham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
 VALUES ('SP041', 'iPad Pro M2 12.9', 32000000, 'Máy tính bảng mạnh nhất', 'SP041.jpg', 'LSP03', 40, 'H01'),
        ('SP042', 'Samsung Galaxy Tab S8 Ultra', 26000000, 'Màn hình siêu lớn', 'SP042.jpg', 'LSP03', 30, 'H02'),
        ('SP043', 'iPad Air 5', 16000000, 'Hiệu năng mạnh, giá tốt', 'SP043.jpg', 'LSP03', 70, 'H01'),
@@ -343,7 +346,7 @@ VALUES ('SP041', 'iPad Pro M2 12.9', 32000000, 'Máy tính bảng mạnh nhất'
        ('SP060', 'Alldocube iPlay 50 Pro', 4500000, 'Giá siêu rẻ', 'SP060.jpg', 'LSP03', 100, 'H24');
 
 -- Đồng hồ thông minh (20)
-INSERT INTO SanPham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
+INSERT INTO sanpham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
 VALUES ('SP061', 'Apple Watch Ultra', 22000000, 'Bền bỉ, pin trâu', 'SP061.jpg', 'LSP04', 50, 'H01'),
        ('SP062', 'Samsung Galaxy Watch 5 Pro', 11000000, 'Thiết kế thể thao', 'SP062.jpg', 'LSP04', 60, 'H02'),
        ('SP063', 'Garmin Fenix 7X', 25000000, 'Đỉnh cao cho dân thể thao', 'SP063.jpg', 'LSP04', 30, 'H25'),
@@ -366,7 +369,7 @@ VALUES ('SP061', 'Apple Watch Ultra', 22000000, 'Bền bỉ, pin trâu', 'SP061.
        ('SP080', 'Oppo Watch 3 Pro', 8500000, 'Chip Snapdragon W5', 'SP080.jpg', 'LSP04', 45, 'H05');
 
 -- Tai nghe (20)
-INSERT INTO SanPham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
+INSERT INTO sanpham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
 VALUES ('SP081', 'AirPods Pro 2', 6000000, 'Chống ồn đỉnh cao', 'SP081.jpg', 'LSP05', 150, 'H01'),
        ('SP082', 'Sony WF-1000XM5', 7000000, 'Chất âm tuyệt vời', 'SP082.jpg', 'LSP05', 100, 'H08'),
        ('SP083', 'Bose QuietComfort Earbuds II', 6500000, 'Chống ồn chủ động tốt nhất', 'SP083.jpg', 'LSP05', 80,
@@ -391,7 +394,7 @@ VALUES ('SP081', 'AirPods Pro 2', 6000000, 'Chống ồn đỉnh cao', 'SP081.jp
        ('SP100', '1MORE EVO', 4000000, 'Âm thanh chi tiết', 'SP100.jpg', 'LSP05', 70, 'H42');
 
 -- Bàn phím (20)
-INSERT INTO SanPham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
+INSERT INTO sanpham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
 VALUES ('SP101', 'Logitech MX Keys S', 2800000, 'Bàn phím văn phòng tốt nhất', 'SP101.jpg', 'LSP06', 100, 'H43'),
        ('SP102', 'Keychron Q1 Pro', 5000000, 'Bàn phím cơ custom', 'SP102.jpg', 'LSP06', 80, 'H44'),
        ('SP103', 'Razer BlackWidow V4 Pro', 5500000, 'Bàn phím cơ gaming', 'SP103.jpg', 'LSP06', 60, 'H15'),
@@ -414,7 +417,7 @@ VALUES ('SP101', 'Logitech MX Keys S', 2800000, 'Bàn phím văn phòng tốt nh
        ('SP120', 'HHKB Professional Hybrid', 7000000, 'Switch Topre', 'SP120.jpg', 'LSP06', 20, 'H56');
 
 -- Chuột (20)
-INSERT INTO SanPham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
+INSERT INTO sanpham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
 VALUES ('SP121', 'Logitech MX Master 3S', 2600000, 'Chuột văn phòng tốt nhất', 'SP121.jpg', 'LSP07', 120, 'H43'),
        ('SP122', 'Razer DeathAdder V3 Pro', 3500000, 'Chuột gaming công thái học', 'SP122.jpg', 'LSP07', 80, 'H15'),
        ('SP123', 'Logitech G Pro X Superlight', 3200000, 'Chuột gaming siêu nhẹ', 'SP123.jpg', 'LSP07', 100, 'H43'),
@@ -437,7 +440,7 @@ VALUES ('SP121', 'Logitech MX Master 3S', 2600000, 'Chuột văn phòng tốt nh
        ('SP140', 'Roccat Kone Pro Air', 2700000, 'Thiết kế công thái học độc đáo', 'SP140.jpg', 'LSP07', 40, 'H62');
 
 -- Màn hình (20)
-INSERT INTO SanPham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
+INSERT INTO sanpham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
 VALUES ('SP141', 'Dell UltraSharp U2723QE', 15000000, 'Màn hình 4K cho đồ họa', 'SP141.jpg', 'LSP08', 50, 'H12'),
        ('SP142', 'LG UltraGear 27GP950-B', 20000000, 'Màn hình gaming 4K 144Hz', 'SP142.jpg', 'LSP08', 30, 'H16'),
        ('SP143', 'Samsung Odyssey Neo G9', 45000000, 'Màn hình siêu cong 49 inch', 'SP143.jpg', 'LSP08', 15, 'H02'),
@@ -461,7 +464,7 @@ VALUES ('SP141', 'Dell UltraSharp U2723QE', 15000000, 'Màn hình 4K cho đồ h
        ('SP160', 'Razer Raptor 27', 19000000, 'Thiết kế đậm chất Razer', 'SP160.jpg', 'LSP08', 30, 'H15');
 
 -- Loa (20)
-INSERT INTO SanPham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
+INSERT INTO sanpham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
 VALUES ('SP161', 'Devialet Phantom I', 60000000, 'Loa không dây hi-end', 'SP161.jpg', 'LSP09', 10, 'H66'),
        ('SP162', 'Bowers & Wilkins Zeppelin', 20000000, 'Thiết kế biểu tượng, âm thanh hay', 'SP162.jpg', 'LSP09', 20,
         'H40'),
@@ -489,7 +492,7 @@ VALUES ('SP161', 'Devialet Phantom I', 60000000, 'Loa không dây hi-end', 'SP16
        ('SP180', 'Bang & Olufsen Beosound A1 2nd Gen', 8000000, 'Loa di động cao cấp', 'SP180.jpg', 'LSP09', 50, 'H71');
 
 -- Phụ kiện khác (20)
-INSERT INTO SanPham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
+INSERT INTO sanpham (sp_id, sp_name, sp_price, sp_description, sp_image, sp_category_id, sp_stock, sp_brand_id)
 VALUES ('SP181', 'Anker 737 Power Bank', 3500000, 'Sạc dự phòng 140W', 'SP181.jpg', 'LSP10', 100, 'H34'),
        ('SP182', 'Logitech C922 Pro Stream Webcam', 2500000, 'Webcam cho streamer', 'SP182.jpg', 'LSP10', 80, 'H43'),
        ('SP183', 'Elgato Stream Deck MK.2', 4000000, 'Bàn điều khiển cho streamer', 'SP183.jpg', 'LSP10', 60, 'H72'),
@@ -512,18 +515,19 @@ VALUES ('SP181', 'Anker 737 Power Bank', 3500000, 'Sạc dự phòng 140W', 'SP1
        ('SP199', 'G.Skill Trident Z5 RGB 32GB', 4000000, 'RAM DDR5 bus cao', 'SP199.jpg', 'LSP10', 75, 'H80'),
        ('SP200', 'Seagate BarraCuda 4TB', 2200000, 'Ổ cứng HDD lưu trữ', 'SP200.jpg', 'LSP10', 130, 'H81');
 
--- KhachHang (5 customers)
-INSERT INTO KhachHang (kh_id, kh_name, kh_password, kh_phone, kh_mail, kh_role)
+-- khachhang (5 customers)
+INSERT INTO khachhang (kh_id, kh_name, kh_password, kh_phone, kh_mail, kh_role)
 VALUES ('KH001', 'Nguyễn Văn A', 'password123', '0912345678', 'nguyenvana@email.com', 'ROLE_CUSTOMER'),
        ('KH002', 'Trần Thị B', 'password123', '0987654321', 'tranthib@email.com', 'ROLE_CUSTOMER'),
        ('KH003', 'Lê Văn C', 'password123', '0905123456', 'levanc@email.com', 'ROLE_CUSTOMER'),
        ('KH004', 'Phạm Thị D', 'password123', '0333444555', 'phamthid@email.com', 'ROLE_CUSTOMER'),
        ('KH005', 'Hoàng Văn E', 'password123', '0777888999', 'hoangvane@email.com', 'ROLE_CUSTOMER');
 
--- NhanVien (1 employee)
-INSERT INTO NhanVien (nv_id, nv_name, nv_password, nv_phone, nv_mail, nv_address, nv_role, nv_birth)
+-- nhanvien (1 employee)
+INSERT INTO nhanvien (nv_id, nv_name, nv_password, nv_phone, nv_mail, nv_address, nv_role, nv_birth)
 VALUES ('NV001', 'Admin', 'adminpass', '0123456789', 'admin@polyubs.com', '123 FPT Polytechnic', 'ROLE_ADMIN',
         '1990-01-01');
 
-UPDATE SanPham
+UPDATE sanpham
 SET sp_price = 1000;
+
