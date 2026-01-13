@@ -2,8 +2,6 @@ CREATE DATABASE IF NOT EXISTS Poly_UBs;
 USE Poly_UBs;
 
 
-
-
 -- 1. Independent Tables
 
 create table vaitro
