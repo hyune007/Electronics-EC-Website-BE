@@ -15,12 +15,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<Customer> getAllCustomers() {
-        return customerRepository.findAll();
+        return customerRepository.findAll ();
     }
-
+    
     @Override
-    public Customer createCustomer(Customer customer) {
-        return customerRepository.save(customer);
+    public Customer findByEmailAndPassword(String email, String password) {
+        return customerRepository.findByEmailAndPassword (email, password);
     }
 
 }

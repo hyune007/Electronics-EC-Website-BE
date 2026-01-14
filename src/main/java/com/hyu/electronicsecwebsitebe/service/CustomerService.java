@@ -7,6 +7,6 @@ import java.util.List;
 public interface CustomerService {
     List<Customer> getAllCustomers();
 
-    Customer createCustomer(Customer customer);
+    Customer findByEmailAndPassword(String email, String password);
 
 }
