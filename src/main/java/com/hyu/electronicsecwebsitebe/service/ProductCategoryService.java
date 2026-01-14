@@ -7,14 +7,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class ProductCategoryService {
+public interface ProductCategoryService {
+    ProductCategory createProductCategory(ProductCategory productCategory);
 
-    @Autowired
-    private ProductCategoryRepository productCategoryRepository;
-
-    public List<ProductCategory> getProductCategoryRepository() {
-        return productCategoryRepository.findAll();
-    }
+    List<ProductCategory> getAllProductCategories();
 
 }

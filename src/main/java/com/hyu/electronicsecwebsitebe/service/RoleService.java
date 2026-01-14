@@ -1,4 +1,4 @@
 package com.hyu.electronicsecwebsitebe.service;
 
-public class RoleService {
+public interface RoleService {
 }

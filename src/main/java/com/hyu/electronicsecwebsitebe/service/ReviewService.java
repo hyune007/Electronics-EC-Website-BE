@@ -1,4 +1,4 @@
 package com.hyu.electronicsecwebsitebe.service;
 
-public class ReviewService {
+public interface ReviewService {
 }
