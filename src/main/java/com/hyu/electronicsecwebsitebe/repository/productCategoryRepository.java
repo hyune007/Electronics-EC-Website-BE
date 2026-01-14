@@ -1,9 +1,9 @@
 package com.hyu.electronicsecwebsitebe.repository;
 
-import com.hyu.electronicsecwebsitebe.model.productCategory;
+import com.hyu.electronicsecwebsitebe.model.ProductCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface productCategoryRepository extends JpaRepository<productCategory, String> {
+public interface productCategoryRepository extends JpaRepository<ProductCategory, String> {
 }

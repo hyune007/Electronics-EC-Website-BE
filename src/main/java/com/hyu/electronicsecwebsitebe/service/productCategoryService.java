@@ -1,6 +1,6 @@
 package com.hyu.electronicsecwebsitebe.service;
 
-import com.hyu.electronicsecwebsitebe.model.productCategory;
+import com.hyu.electronicsecwebsitebe.model.ProductCategory;
 import com.hyu.electronicsecwebsitebe.repository.productCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ public class productCategoryService {
     @Autowired
     private productCategoryRepository productCategoryRepository;
 
-    public List<productCategory> getProductCategoryRepository() {
+    public List<ProductCategory> getProductCategoryRepository() {
         return productCategoryRepository.findAll();
     }
 
