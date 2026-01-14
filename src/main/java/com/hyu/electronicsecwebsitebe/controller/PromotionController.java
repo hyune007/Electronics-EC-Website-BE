@@ -1,4 +1,4 @@
 package com.hyu.electronicsecwebsitebe.controller;
 
-public class sampleController {
+public class PromotionController {
 }
