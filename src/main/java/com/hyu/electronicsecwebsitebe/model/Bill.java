@@ -10,16 +10,16 @@ import java.util.Date;
 @Table(name = "hoadon")
 public class Bill {
     @Id
-    @JoinColumn(name = "hd_id")
+    @Column(name = "hd_id")
     private String id;
 
-    @JoinColumn(name = "hd_date")
+    @Column(name = "hd_date")
     private Date date;
 
-    @JoinColumn(name = "hd_status")
+    @Column(name = "hd_status")
     private String status;
 
-    @JoinColumn(name = "payment_method")
+    @Column(name = "payment_method")
     private String paymentMethod;
 
     @ManyToOne
