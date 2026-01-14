@@ -2,6 +2,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 
 import com.hyu.electronicsecwebsitebe.model.ProductCategory;
 import com.hyu.electronicsecwebsitebe.service.ProductCategoryService;
+import com.hyu.electronicsecwebsitebe.service.impl.ProductCategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,11 +15,11 @@ import java.util.List;
 public class ProductCategoryController {
 
     @Autowired
-    private ProductCategoryService productCategoryService;
+    private ProductCategoryServiceImpl productCategoryService;
 
     @GetMapping("/all")
     public List<ProductCategory> getAllProductCategories() {
-        return productCategoryService.getProductCategoryRepository();
+        return productCategoryService.getAllProductCategories();
     }
 
 }
