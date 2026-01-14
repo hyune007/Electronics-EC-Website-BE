@@ -8,19 +8,19 @@ import lombok.Data;
 @Table(name = "diachi")
 public class Address {
     @Id
-    @Column(name = "dc_id", length = 8)
+    @Column(name = "dc_id")
     private String id;
 
-    @Column(name = "dc_city", length = 50)
+    @Column(name = "dc_city")
     private String city;
 
-    @Column(name = "dc_ward", length = 50)
+    @Column(name = "dc_ward")
     private String ward;
 
-    @Column(name = "dc_detailaddress", length = 50)
+    @Column(name = "dc_detailaddress")
     private String detailAddress;
 
-    @Column(name = "dc_is_default", length = 255)
+    @Column(name = "dc_is_default")
     private boolean isDefault = false;
 
     @ManyToOne

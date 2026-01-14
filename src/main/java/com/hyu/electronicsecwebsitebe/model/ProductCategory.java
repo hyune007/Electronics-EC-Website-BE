@@ -13,6 +13,7 @@ public class ProductCategory {
     @Id
     @Column(name = "lsp_id")
     private String id;
+
     @Column(name = "lsp_name")
     private String name;
 }
