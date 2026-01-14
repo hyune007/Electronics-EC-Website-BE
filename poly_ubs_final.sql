@@ -78,14 +78,14 @@ create table diachi
 
 create table sanpham
 (
-    sp_id          VARCHAR(8)   NOT NULL,
-    sp_name        VARCHAR(100) NOT NULL,
-    sp_price       INT          NOT NULL,
-    sp_description VARCHAR(100) NOT NULL,
-    sp_image       VARCHAR(100) NOT NULL,
-    sp_category_id VARCHAR(20)  NOT NULL,
-    sp_stock       INT          NOT NULL,
-    sp_brand_id    VARCHAR(50)  NOT NULL,
+    sp_id          VARCHAR(8)     NOT NULL,
+    sp_name        VARCHAR(100)   NOT NULL,
+    sp_price       DECIMAL(18, 0) NOT NULL,
+    sp_description VARCHAR(100)   NOT NULL,
+    sp_image       VARCHAR(100)   NOT NULL,
+    sp_category_id VARCHAR(20)    NOT NULL,
+    sp_stock       INT            NOT NULL,
+    sp_brand_id    VARCHAR(50)    NOT NULL,
     PRIMARY KEY (sp_id),
     FOREIGN KEY (sp_brand_id) REFERENCES hang (hang_id),
     FOREIGN KEY (sp_category_id) REFERENCES loaisanpham (lsp_id)
@@ -120,11 +120,11 @@ create table hoadon
 
 create table chitiethoadon
 (
-    hdct_id    VARCHAR(8) NOT NULL,
-    hd_id      VARCHAR(8) NOT NULL,
-    sp_id      VARCHAR(8) NOT NULL,
-    quantity   INT        NOT NULL,
-    hdct_total INT        NOT NULL,
+    hdct_id    VARCHAR(8)     NOT NULL,
+    hd_id      VARCHAR(8)     NOT NULL,
+    sp_id      VARCHAR(8)     NOT NULL,
+    quantity   INT            NOT NULL,
+    hdct_total DECIMAL(18, 0) NOT NULL,
     PRIMARY KEY (hdct_id),
     FOREIGN KEY (hd_id) REFERENCES hoadon (hd_id),
     FOREIGN KEY (sp_id) REFERENCES sanpham (sp_id)

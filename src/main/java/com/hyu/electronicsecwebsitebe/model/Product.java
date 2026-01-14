@@ -3,6 +3,8 @@ package com.hyu.electronicsecwebsitebe.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @Entity
 @Table(name = "sanpham")
@@ -15,7 +17,7 @@ public class Product {
     private String name;
 
     @Column(name = "sp_price")
-    private int price;
+    private BigDecimal price;
 
     @Column(name = "sp_description")
     private String description;

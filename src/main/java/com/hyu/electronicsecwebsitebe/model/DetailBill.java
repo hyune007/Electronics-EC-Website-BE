@@ -3,6 +3,8 @@ package com.hyu.electronicsecwebsitebe.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @Entity
 @Table(name = "chitiethoadon")
@@ -15,7 +17,7 @@ public class DetailBill {
     private int quantity;
 
     @Column(name = "hdct_total")
-    private int total;
+    private BigDecimal total;
 
     @ManyToOne
     @JoinColumn(name = "hd_id")
