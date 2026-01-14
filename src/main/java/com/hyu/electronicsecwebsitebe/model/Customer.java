@@ -23,5 +23,7 @@ public class Customer {
     @Column(name = "kh_mail")
     private String email;
 
-
+    @ManyToOne
+    @JoinColumn(name = "kh_role")
+    private Role role;
 }

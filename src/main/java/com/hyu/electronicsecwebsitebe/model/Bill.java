@@ -14,6 +14,7 @@ public class Bill {
     private String id;
 
     @Column(name = "hd_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
     @Column(name = "hd_status")
