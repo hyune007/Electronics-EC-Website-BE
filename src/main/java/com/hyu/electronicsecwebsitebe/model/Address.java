@@ -26,13 +26,4 @@ public class Address {
     @ManyToOne
     @JoinColumn(name = "kh_id")
     private Customer customer;
-
-    @Transient
-    public String getFullAddress() {
-        StringBuilder sb = new StringBuilder ();
-        if (detailAddress != null) sb.append (detailAddress);
-        if (ward != null) sb.append (sb.length () > 0 ? ", " : "").append (ward);
-        if (city != null) sb.append (sb.length () > 0 ? ", " : "").append (city);
-        return sb.toString ();
-    }
 }
