@@ -9,6 +9,8 @@ public interface CustomerService {
 
     Customer findById(String id);
 
+    Customer findByEmail(String email);
+
     Customer saveCustomer(Customer customer);
 
     Customer updateCustomer(Customer customer);

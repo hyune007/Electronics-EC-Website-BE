@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/customers")
+@RequestMapping("/api/customer")
 public class CustomerController {
     @Autowired
     private CustomerServiceImpl customerService;
@@ -21,6 +21,11 @@ public class CustomerController {
     @GetMapping("/{id}")
     public Customer findById(@PathVariable String id) {
         return customerService.findById (id);
+    }
+
+    @GetMapping("/mail/{email}")
+    public Customer findByEmail(@PathVariable String email) {
+        return customerService.findByEmail (email);
     }
 
     @PostMapping("/save")
