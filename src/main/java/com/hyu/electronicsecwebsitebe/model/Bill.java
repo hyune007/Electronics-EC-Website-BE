@@ -3,7 +3,9 @@ package com.hyu.electronicsecwebsitebe.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -34,4 +36,7 @@ public class Bill {
     @ManyToOne
     @JoinColumn(name = "dc_id")
     private Address address;
+
+    @OneToMany(mappedBy = "bill")
+    private List<DetailBill> detailBills = new ArrayList<> ();
 }

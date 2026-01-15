@@ -3,6 +3,9 @@ package com.hyu.electronicsecwebsitebe.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "khachhang")
@@ -26,4 +29,5 @@ public class Customer {
     @ManyToOne
     @JoinColumn(name = "kh_role")
     private Role role;
+
 }

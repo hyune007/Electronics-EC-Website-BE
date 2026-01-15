@@ -17,10 +17,25 @@ public class CustomerServiceImpl implements CustomerService {
     public List<Customer> getAllCustomers() {
         return customerRepository.findAll ();
     }
-    
+
     @Override
-    public Customer findByEmailAndPassword(String email, String password) {
-        return customerRepository.findByEmailAndPassword (email, password);
+    public Customer saveCustomer(Customer customer) {
+        return customerRepository.save (customer);
+    }
+
+    @Override
+    public Customer updateCustomer(Customer customer) {
+        return customerRepository.save (customer);
+    }
+
+    @Override
+    public Customer findById(String id) {
+        return customerRepository.findById (id).orElse (null);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        customerRepository.deleteById (id);
     }
 
 }

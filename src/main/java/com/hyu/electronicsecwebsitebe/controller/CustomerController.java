@@ -3,10 +3,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 import com.hyu.electronicsecwebsitebe.model.Customer;
 import com.hyu.electronicsecwebsitebe.service.impl.CustomerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,7 +15,28 @@ public class CustomerController {
 
     @GetMapping("/all")
     public List<Customer> getAllCustomers() {
-        return customerService.getAllCustomers();
+        return customerService.getAllCustomers ();
+    }
+
+    @GetMapping("/{id}")
+    public Customer findById(@PathVariable String id) {
+        return customerService.findById (id);
+    }
+
+    @PostMapping("/save")
+    public Customer saveCustomer(@RequestBody Customer customer) {
+        return customerService.saveCustomer (customer);
+    }
+
+    @PutMapping("/update/{id}")
+    public Customer updateCustomer(@PathVariable String id, @RequestBody Customer customer) {
+        customer.setId (id);
+        return customerService.updateCustomer (customer);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteById(@PathVariable String id) {
+        customerService.deleteById (id);
     }
 
 }
