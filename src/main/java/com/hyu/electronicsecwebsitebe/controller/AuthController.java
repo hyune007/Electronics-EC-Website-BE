@@ -3,6 +3,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 import com.hyu.electronicsecwebsitebe.dto.request.LoginRequest;
 import com.hyu.electronicsecwebsitebe.dto.response.LoginResponse;
 import com.hyu.electronicsecwebsitebe.service.impl.AuthServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class AuthController {
     AuthServiceImpl authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         LoginResponse loginResponse = authService.login (loginRequest.getEmail (), loginRequest.getPassword ());
         if (loginResponse != null) {
             return ResponseEntity.ok (loginResponse);

@@ -17,7 +17,11 @@ public class AuthServiceImpl implements AuthService {
         Customer customer = customerRepository.findByEmailAndPassword (email, password);
         if (customer != null) {
             String roleName = customer.getRole ().getName ();
-            return new LoginResponse (customer.getId (), customer.getName (), roleName);
+            return LoginResponse.builder ()
+                    .id (customer.getId ())
+                    .name (customer.getName ())
+                    .roleName (roleName)
+                    .build ();
         }
         return null;
     }
