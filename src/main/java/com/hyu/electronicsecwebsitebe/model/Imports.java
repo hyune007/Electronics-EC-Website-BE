@@ -3,7 +3,7 @@ package com.hyu.electronicsecwebsitebe.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.Instant;
 
 @Data
 @Entity
@@ -17,8 +17,7 @@ public class Imports {
     private int quantity;
 
     @Column(name = "nk_date")
-    @Temporal(TemporalType.DATE)
-    private Date importDate;
+    private Instant importDate;
 
     @ManyToOne
     @JoinColumn(name = "sp_id")

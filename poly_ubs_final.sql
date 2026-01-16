@@ -135,7 +135,7 @@ create table nhapkho
     nk_id       VARCHAR(8) NOT NULL,
     nk_quantity INT        NOT NULL,
     sp_id       VARCHAR(8) NOT NULL,
-    nk_date     DATE       NOT NULL,
+    nk_date     DATETIME       NOT NULL,
     PRIMARY KEY (nk_id),
     FOREIGN KEY (sp_id) REFERENCES sanpham (sp_id)
 );
