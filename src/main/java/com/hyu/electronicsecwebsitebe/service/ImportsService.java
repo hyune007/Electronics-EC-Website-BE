@@ -6,4 +6,12 @@ import java.util.List;
 
 public interface ImportsService {
     List<Imports> getAllImports();
+
+    Imports findById(String id);
+
+    Imports saveImports(Imports imports);
+
+    Imports updateImports(Imports imports);
+
+    void deleteImports(String id);
 }

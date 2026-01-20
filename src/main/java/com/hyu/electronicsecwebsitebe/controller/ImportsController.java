@@ -3,9 +3,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 import com.hyu.electronicsecwebsitebe.model.Imports;
 import com.hyu.electronicsecwebsitebe.service.impl.ImportsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,5 +16,25 @@ public class ImportsController {
     @GetMapping("/all")
     public List<Imports> getAllImports() {
         return importsService.getAllImports ();
+    }
+
+    @GetMapping("/{id}")
+    public Imports getImportsById(@PathVariable String id) {
+        return importsService.findById (id);
+    }
+
+    @PostMapping("/save")
+    public Imports saveImports(@RequestBody Imports imports) {
+        return importsService.saveImports (imports);
+    }
+
+    @PutMapping("/update")
+    public Imports updateImports(@RequestBody Imports imports) {
+        return importsService.updateImports (imports);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteImports(@PathVariable String id) {
+        importsService.deleteImports (id);
     }
 }
