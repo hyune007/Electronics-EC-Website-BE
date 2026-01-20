@@ -3,6 +3,7 @@ package com.hyu.electronicsecwebsitebe.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.Instant;
 import java.util.Date;
 
 @Data
@@ -23,10 +24,8 @@ public class Promotion {
     private int discountPercentage;
 
     @Column(name = "km_start_date")
-    @Temporal(TemporalType.DATE)
-    private Date startDate;
+    private Instant startDate;
 
     @Column(name = "km_end_date")
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
+    private Instant endDate;
 }
