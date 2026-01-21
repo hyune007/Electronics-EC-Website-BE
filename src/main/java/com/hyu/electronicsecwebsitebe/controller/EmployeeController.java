@@ -17,47 +17,47 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @GetMapping("/{p}/{q}")
+    @GetMapping("/page/{p}/keywork/{q}")
     public ResponseEntity<Page<Employee>> getEmployees(@PathVariable int p, @PathVariable String q) {
         Pageable pageable = PageRequest.of (p, 10);
-        Page<Employee> employees = employeeService.getEmployees(pageable, q);
-        return ResponseEntity.ok(employees);
+        Page<Employee> employees = employeeService.getEmployees (pageable, q);
+        return ResponseEntity.ok (employees);
     }
 
     @GetMapping("/detail/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable String id) {
-        if(!employeeService.existsById(id)){
-            return ResponseEntity.notFound().build();
+        if (!employeeService.existsById (id)) {
+            return ResponseEntity.notFound ().build ();
         }
-        Employee employee = employeeService.findById(id);
-        return ResponseEntity.ok(employee);
+        Employee employee = employeeService.findById (id);
+        return ResponseEntity.ok (employee);
     }
 
-    @PostMapping("/stored")
+    @PostMapping("/save")
     public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
-        if(employeeService.existsById(employee.getId())){
-            return ResponseEntity.badRequest().build();
+        if (employeeService.existsById (employee.getId ())) {
+            return ResponseEntity.badRequest ().build ();
         }
-        Employee createdEmployee = employeeService.createEmployee(employee);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdEmployee);
+        Employee createdEmployee = employeeService.createEmployee (employee);
+        return ResponseEntity.status (HttpStatus.CREATED).body (createdEmployee);
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Employee> updateEmployee(@PathVariable String id, @RequestBody Employee employee) {
-        if(!employeeService.existsById(id)){
-            return ResponseEntity.notFound().build();
+        if (!employeeService.existsById (id)) {
+            return ResponseEntity.notFound ().build ();
         }
-        employee.setId(id);
-        Employee updatedEmployee = employeeService.updateEmployee(employee);
-        return ResponseEntity.ok(updatedEmployee);
+        employee.setId (id);
+        Employee updatedEmployee = employeeService.updateEmployee (employee);
+        return ResponseEntity.ok (updatedEmployee);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable String id) {
-        if(!employeeService.existsById(id)){
-            return ResponseEntity.notFound().build();
+        if (!employeeService.existsById (id)) {
+            return ResponseEntity.notFound ().build ();
         }
-        employeeService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        employeeService.deleteById (id);
+        return ResponseEntity.noContent ().build ();
     }
 }
