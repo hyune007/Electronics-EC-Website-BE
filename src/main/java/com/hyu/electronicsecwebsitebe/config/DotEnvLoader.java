@@ -17,7 +17,7 @@ public class DotEnvLoader implements EnvironmentPostProcessor {
 
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        // Cấu hình và tải nội dung từ tập tin .env tại thư mục gốc
+        // Cấu hình và tải nội dung từ tập tin ..env tại thư mục gốc
         Dotenv dotenv = Dotenv.configure()
                 .directory("./")
                 .ignoreIfMissing()
@@ -29,7 +29,7 @@ public class DotEnvLoader implements EnvironmentPostProcessor {
             dotenvMap.put(e.getKey(), e.getValue());
         });
 
-        // Tích hợp biến môi trường từ .env vào Spring Environment với độ ưu tiên cao nhất
+        // Tích hợp biến môi trường từ ..env vào Spring Environment với độ ưu tiên cao nhất
         environment.getPropertySources()
                 .addFirst(new MapPropertySource("dotenvProperties", dotenvMap));
     }
