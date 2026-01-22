@@ -17,8 +17,9 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @GetMapping("/page/{p}/keywork/{q}")
-    public ResponseEntity<Page<Employee>> getEmployees(@PathVariable int p, @PathVariable String q) {
+    @GetMapping("/")
+    public ResponseEntity<Page<Employee>> getEmployees(@RequestParam(defaultValue = "0") int p,
+                                                       @RequestParam(required = false) String q) {
         Pageable pageable = PageRequest.of (p, 10);
         Page<Employee> employees = employeeService.getEmployees (pageable, q);
         return ResponseEntity.ok (employees);
