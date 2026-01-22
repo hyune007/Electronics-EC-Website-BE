@@ -4,6 +4,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 import com.hyu.electronicsecwebsitebe.model.ShoppingCart;
 import com.hyu.electronicsecwebsitebe.service.impl.ShoppingCartServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,13 +16,18 @@ public class ShoppingCartController {
     private ShoppingCartServiceImpl shoppingCartService;
 
     @GetMapping("/all")
-    public List<ShoppingCart> getAllShoppingCart() {
-        return shoppingCartService.getAllShoppingCarts ();
+    public ResponseEntity<List<ShoppingCart>> getAllShoppingCart() {
+        List<ShoppingCart> listShoppingCarts = shoppingCartService.getAllShoppingCarts ();
+        return ResponseEntity.ok (listShoppingCarts);
     }
 
     @GetMapping("/{id}")
-    public ShoppingCart findById(@PathVariable String id) {
-        return shoppingCartService.getShoppingCartById (id);
+    public ResponseEntity<ShoppingCart> getShoppingCartById(@PathVariable String id) {
+        if (!shoppingCartService.existsById (id)) {
+            return ResponseEntity.notFound ().build ();
+        }
+        ShoppingCart foundShoppingCart = shoppingCartService.findById (id);
+        return ResponseEntity.ok (foundShoppingCart);
     }
 
     @GetMapping("/customer/{customerId}")
@@ -41,7 +47,8 @@ public class ShoppingCartController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteById(@PathVariable String id) {
+    public ResponseEntity<Void> deleteShoppingCart(@PathVariable String id) {
         shoppingCartService.deleteById (id);
+        return ResponseEntity.ok ().build ();
     }
 }

@@ -7,13 +7,15 @@ import java.util.List;
 public interface ShoppingCartService {
     List<ShoppingCart> getAllShoppingCarts();
 
-    ShoppingCart getShoppingCartById(String id);
+    ShoppingCart findById(String id);
 
     ShoppingCart findByCustomerId(String customerId);
 
     ShoppingCart saveShoppingCart(ShoppingCart shoppingCart);
 
     ShoppingCart updateShoppingCart(ShoppingCart shoppingCart);
+
+    boolean existsById(String id);
 
     void deleteById(String id);
 }
