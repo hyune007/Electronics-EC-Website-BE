@@ -4,6 +4,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 import com.hyu.electronicsecwebsitebe.model.Role;
 import com.hyu.electronicsecwebsitebe.service.impl.RoleServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +37,7 @@ public class RoleController {
             return ResponseEntity.badRequest ().build ();
         }
         Role savedRole = roleService.saveRole (role);
-        return ResponseEntity.status (201).body (savedRole);
+        return ResponseEntity.status (HttpStatus.CREATED).body (savedRole);
     }
 
     @PutMapping("/update/{id}")

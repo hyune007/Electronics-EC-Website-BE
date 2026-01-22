@@ -13,5 +13,7 @@ public interface ImportsService {
 
     Imports updateImports(Imports imports);
 
+    boolean existsById(String id);
+
     void deleteImports(String id);
 }

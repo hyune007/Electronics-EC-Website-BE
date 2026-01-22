@@ -4,6 +4,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 import com.hyu.electronicsecwebsitebe.model.Customer;
 import com.hyu.electronicsecwebsitebe.service.impl.CustomerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +47,7 @@ public class CustomerController {
             return ResponseEntity.badRequest ().build ();
         }
         Customer savedCustomer = customerService.saveCustomer (customer);
-        return ResponseEntity.status (201).body (savedCustomer);
+        return ResponseEntity.status (HttpStatus.CREATED).body (savedCustomer);
     }
 
     @PutMapping("/update/{id}")

@@ -4,6 +4,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 import com.hyu.electronicsecwebsitebe.model.ProductCategory;
 import com.hyu.electronicsecwebsitebe.service.impl.ProductCategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +37,7 @@ public class ProductCategoryController {
             return ResponseEntity.badRequest ().build ();
         }
         ProductCategory savedProductCategory = productCategoryService.saveProductCategory (productCategory);
-        return ResponseEntity.status (201).body (savedProductCategory);
+        return ResponseEntity.status (HttpStatus.CREATED).body (savedProductCategory);
     }
 
     @DeleteMapping("/delete/{id}")

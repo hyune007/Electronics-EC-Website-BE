@@ -4,6 +4,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 import com.hyu.electronicsecwebsitebe.model.Review;
 import com.hyu.electronicsecwebsitebe.service.impl.ReviewServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,7 +73,7 @@ public class ReviewController {
             return ResponseEntity.badRequest ().build ();
         }
         Review savedReview = reviewService.saveReview (review);
-        return ResponseEntity.status (201).body (savedReview);
+        return ResponseEntity.status (HttpStatus.CREATED).body (savedReview);
     }
 
     @PutMapping("/update/{id}")
