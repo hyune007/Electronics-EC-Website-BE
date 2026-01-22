@@ -34,6 +34,11 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     }
 
     @Override
+    public boolean existsById(String id) {
+        return prodcutCategoryRepository.existsById (id);
+    }
+
+    @Override
     public void deleteById(String id) {
         prodcutCategoryRepository.deleteById (id);
     }
