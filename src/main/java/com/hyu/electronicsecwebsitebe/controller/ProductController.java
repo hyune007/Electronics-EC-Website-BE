@@ -2,6 +2,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 
 import com.hyu.electronicsecwebsitebe.model.Product;
 import com.hyu.electronicsecwebsitebe.service.ProductService;
+import com.hyu.electronicsecwebsitebe.service.impl.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/product")
 public class ProductController {
     @Autowired
-    ProductService productService;
+    private ProductServiceImpl productService;
 
     @GetMapping("/page/{p}/category/{category}/keyword/{q}")
     public ResponseEntity<Page<Product>> getProducts(@PathVariable int p, @PathVariable String category, @PathVariable String q) {
