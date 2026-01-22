@@ -1,4 +1,5 @@
 package com.hyu.electronicsecwebsitebe.controller;
+//huynt
 
 import com.hyu.electronicsecwebsitebe.model.Brand;
 import com.hyu.electronicsecwebsitebe.service.impl.BrandServiceImpl;
@@ -6,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-//huynt
+
 import java.util.List;
 
 @RestController
