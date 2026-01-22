@@ -21,5 +21,7 @@ public interface ReviewService {
 
     Review updateReview(String id, Review review);
 
+    boolean existsById(String id);
+
     void deleteReview(String id);
 }

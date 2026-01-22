@@ -4,6 +4,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 import com.hyu.electronicsecwebsitebe.model.Review;
 import com.hyu.electronicsecwebsitebe.service.impl.ReviewServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,49 +16,81 @@ public class ReviewController {
     private ReviewServiceImpl reviewService;
 
     @GetMapping("/all")
-    public List<Review> getAllReviews() {
-        return reviewService.getAllReviews ();
+    public ResponseEntity<List<Review>> getAllReviews() {
+        List<Review> listReviews = reviewService.getAllReviews ();
+        return ResponseEntity.ok (listReviews);
     }
 
     @GetMapping("/{id}")
-    public Review findById(@PathVariable String id) {
-        return reviewService.findById (id);
+    public ResponseEntity<Review> getReviewById(@PathVariable String id) {
+        if (!reviewService.existsById (id)) {
+            return ResponseEntity.notFound ().build ();
+        }
+        Review foundReview = reviewService.findById (id);
+        return ResponseEntity.ok (foundReview);
     }
 
     @GetMapping("/{id}/product/{productId}")
-    public Review findByIdAndProductId(@PathVariable String id, @PathVariable
-    String productId) {
-        return reviewService.findByIdAndProductId (id, productId);
+    public ResponseEntity<Review> getReviewByProductId(@PathVariable String id, @PathVariable String productId) {
+        Review foundReview = reviewService.findByIdAndProductId (id, productId);
+        if (foundReview == null) {
+            return ResponseEntity.notFound ().build ();
+        }
+        return ResponseEntity.ok (foundReview);
     }
 
     @GetMapping("/product/{productId}")
-    public Review findByProductId(@PathVariable String productId) {
-        return reviewService.findByProductId (productId);
+    public ResponseEntity<Review> getReviewByProductId(@PathVariable String productId) {
+        Review foundReview = reviewService.findByProductId (productId);
+        if (foundReview == null) {
+            return ResponseEntity.notFound ().build ();
+        }
+        return ResponseEntity.ok (foundReview);
     }
 
     @GetMapping("/customer/{customerId}")
-    public Review findByCustomerId(@PathVariable String customerId) {
-        return reviewService.findByCustomerId (customerId);
+    public ResponseEntity<Review> getReviewByCustomerId(@PathVariable String customerId) {
+        Review foundReview = reviewService.findByCustomerId (customerId);
+        if (foundReview == null) {
+            return ResponseEntity.notFound ().build ();
+        }
+        return ResponseEntity.ok (foundReview);
     }
 
     @GetMapping("/customer/{customerId}/product/{productId}")
-    public Review findByCustomerIdAndProductId(@PathVariable String customerId,
-                                               @PathVariable String productId) {
-        return reviewService.findByCustomerIdAndProductId (customerId, productId);
+    public ResponseEntity<Review> getReviewByCustomerIdAndProductId(@PathVariable String customerId, @PathVariable String productId) {
+        Review foundReview = reviewService.findByCustomerIdAndProductId (customerId, productId);
+        if (foundReview == null) {
+            return ResponseEntity.notFound ().build ();
+        }
+        return ResponseEntity.ok (foundReview);
     }
 
     @PostMapping("/save")
-    public Review saveReview(@RequestBody Review review) {
-        return reviewService.saveReview (review);
+    public ResponseEntity<Review> saveReview(@RequestBody Review review) {
+        if (reviewService.existsById (review.getId ())) {
+            return ResponseEntity.badRequest ().build ();
+        }
+        Review savedReview = reviewService.saveReview (review);
+        return ResponseEntity.status (201).body (savedReview);
     }
 
     @PutMapping("/update/{id}")
-    public Review updateReview(@PathVariable String id, @RequestBody Review review) {
-        return reviewService.updateReview (id, review);
+    public ResponseEntity<Review> updateReview(@PathVariable String id, @RequestBody Review review) {
+        if (!reviewService.existsById (id)) {
+            return ResponseEntity.notFound ().build ();
+        }
+        review.setId (id);
+        Review updatedReview = reviewService.updateReview (id, review);
+        return ResponseEntity.ok (updatedReview);
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteReview(@PathVariable String id) {
+    public ResponseEntity<Void> deleteReview(@PathVariable String id) {
+        if (!reviewService.existsById (id)) {
+            return ResponseEntity.notFound ().build ();
+        }
         reviewService.deleteReview (id);
+        return ResponseEntity.noContent ().build ();
     }
 }

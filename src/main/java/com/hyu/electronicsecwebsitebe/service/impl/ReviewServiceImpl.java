@@ -55,6 +55,11 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    public boolean existsById(String id) {
+        return reviewRepository.existsById (id);
+    }
+
+    @Override
     public void deleteReview(String id) {
         reviewRepository.deleteById (id);
     }
