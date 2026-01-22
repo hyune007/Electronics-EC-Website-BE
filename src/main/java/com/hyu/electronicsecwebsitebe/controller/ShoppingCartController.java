@@ -4,6 +4,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 import com.hyu.electronicsecwebsitebe.model.ShoppingCart;
 import com.hyu.electronicsecwebsitebe.service.impl.ShoppingCartServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,23 +32,38 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/customer/{customerId}")
-    public ShoppingCart findByCustomerId(@PathVariable String customerId) {
-        return shoppingCartService.findByCustomerId (customerId);
+    public ResponseEntity<ShoppingCart> getShoppingCartByCustomerId(@PathVariable String customerId) {
+        ShoppingCart foundShoppingCart = shoppingCartService.findByCustomerId (customerId);
+        if (foundShoppingCart == null) {
+            return ResponseEntity.notFound ().build ();
+        }
+        return ResponseEntity.ok (foundShoppingCart);
     }
 
     @PostMapping("/save")
-    public ShoppingCart saveShoppingCart(@RequestBody ShoppingCart shoppingCart) {
-        return shoppingCartService.saveShoppingCart (shoppingCart);
-
+    public ResponseEntity<ShoppingCart> saveShoppingCart(@RequestBody ShoppingCart shoppingCart) {
+        if (shoppingCartService.existsById (shoppingCart.getId ())) {
+            return ResponseEntity.badRequest ().build ();
+        }
+        ShoppingCart savedShoppingCart = shoppingCartService.saveShoppingCart (shoppingCart);
+        return ResponseEntity.status (HttpStatus.CREATED).body (savedShoppingCart);
     }
 
-    @PutMapping("/update")
-    public ShoppingCart updateShoppingCart(@RequestBody ShoppingCart shoppingCart) {
-        return shoppingCartService.updateShoppingCart (shoppingCart);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ShoppingCart> updateShoppingCart(@PathVariable String id, @RequestBody ShoppingCart shoppingCart) {
+        if (!shoppingCartService.existsById (id)) {
+            return ResponseEntity.notFound ().build ();
+        }
+        shoppingCart.setId (id);
+        ShoppingCart updatedShoppingCart = shoppingCartService.updateShoppingCart (shoppingCart);
+        return ResponseEntity.ok (updatedShoppingCart);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteShoppingCart(@PathVariable String id) {
+        if (!shoppingCartService.existsById (id)) {
+            return ResponseEntity.notFound ().build ();
+        }
         shoppingCartService.deleteById (id);
         return ResponseEntity.ok ().build ();
     }

@@ -35,6 +35,11 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
+    public boolean existsById(String id) {
+        return false;
+    }
+
+    @Override
     public void deletePromotion(String id) {
         promotionRepository.deleteById (id);
     }
