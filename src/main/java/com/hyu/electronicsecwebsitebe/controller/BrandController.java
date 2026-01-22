@@ -3,8 +3,10 @@ package com.hyu.electronicsecwebsitebe.controller;
 import com.hyu.electronicsecwebsitebe.model.Brand;
 import com.hyu.electronicsecwebsitebe.service.impl.BrandServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+//huynt
 import java.util.List;
 
 @RestController
@@ -14,28 +16,45 @@ public class BrandController {
     private BrandServiceImpl brandService;
 
     @GetMapping("/all")
-    public List<Brand> getAllBrands() {
-        return brandService.getAllBrands ();
+    public ResponseEntity<List<Brand>> getAllBrands() {
+        List<Brand> listBrands = brandService.getAllBrands ();
+        return ResponseEntity.ok (listBrands);
     }
 
     @GetMapping("/{id}")
-    public Brand getBrandById(@PathVariable String id) {
-        return brandService.findById (id);
+    public ResponseEntity<Brand> getBrandById(@PathVariable String id) {
+        if (!brandService.existsById (id)) {
+            return ResponseEntity.notFound ().build ();
+        }
+        Brand foundBrand = brandService.findById (id);
+        return ResponseEntity.ok (foundBrand);
     }
 
     @PostMapping("/save")
-    public Brand saveBrand(@RequestBody Brand brand) {
-        return brandService.saveBrand (brand);
+    public ResponseEntity<Brand> saveBrand(@RequestBody Brand brand) {
+        if (brandService.existsById (brand.getId ())) {
+            return ResponseEntity.badRequest ().build ();
+        }
+        Brand savedBrand = brandService.saveBrand (brand);
+        return ResponseEntity.status (HttpStatus.CREATED).body (savedBrand);
     }
 
     @PutMapping("/update/{id}")
-    public Brand updateBrand(@PathVariable String id, @RequestBody Brand brand) {
+    public ResponseEntity<Brand> updateBrand(@PathVariable String id, @RequestBody Brand brand) {
+        if (!brandService.existsById (id)) {
+            return ResponseEntity.notFound ().build ();
+        }
         brand.setId (id);
-        return brandService.updateBrand (brand);
+        Brand updatedBrand = brandService.updateBrand (brand);
+        return ResponseEntity.ok (updatedBrand);
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteBrandById(@PathVariable String id) {
+    public ResponseEntity<Void> deleteBrand(@PathVariable String id) {
+        if (!brandService.existsById (id)) {
+            return ResponseEntity.notFound ().build ();
+        }
         brandService.deleteById (id);
+        return ResponseEntity.noContent ().build ();
     }
 }
