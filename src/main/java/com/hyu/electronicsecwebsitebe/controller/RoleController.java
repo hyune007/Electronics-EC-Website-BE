@@ -2,7 +2,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 //huynt
 
 import com.hyu.electronicsecwebsitebe.model.Role;
-import com.hyu.electronicsecwebsitebe.service.impl.RoleServiceImpl;
+import com.hyu.electronicsecwebsitebe.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/role")
 public class RoleController {
     @Autowired
-    private RoleServiceImpl roleService;
+    private RoleService roleService;
 
     @GetMapping("/all")
     public ResponseEntity<List<Role>> getAllRoles() {

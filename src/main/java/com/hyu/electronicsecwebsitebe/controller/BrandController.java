@@ -2,7 +2,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 //huynt
 
 import com.hyu.electronicsecwebsitebe.model.Brand;
-import com.hyu.electronicsecwebsitebe.service.impl.BrandServiceImpl;
+import com.hyu.electronicsecwebsitebe.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/brand")
 public class BrandController {
     @Autowired
-    private BrandServiceImpl brandService;
+    private BrandService brandService;
 
     @GetMapping("/all")
     public ResponseEntity<List<Brand>> getAllBrands() {

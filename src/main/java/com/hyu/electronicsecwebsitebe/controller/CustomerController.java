@@ -2,7 +2,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 //huynt
 
 import com.hyu.electronicsecwebsitebe.model.Customer;
-import com.hyu.electronicsecwebsitebe.service.impl.CustomerServiceImpl;
+import com.hyu.electronicsecwebsitebe.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/customer")
 public class CustomerController {
     @Autowired
-    private CustomerServiceImpl customerService;
+    private CustomerService customerService;
 
     @GetMapping("/all")
     public ResponseEntity<List<Customer>> getAllCustomers() {

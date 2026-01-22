@@ -36,7 +36,7 @@ public class PromotionServiceImpl implements PromotionService {
 
     @Override
     public boolean existsById(String id) {
-        return false;
+        return promotionRepository.existsById (id);
     }
 
     @Override

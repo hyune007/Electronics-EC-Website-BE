@@ -2,7 +2,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 //huynt
 
 import com.hyu.electronicsecwebsitebe.model.Imports;
-import com.hyu.electronicsecwebsitebe.service.impl.ImportsServiceImpl;
+import com.hyu.electronicsecwebsitebe.service.ImportsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/imports")
 public class ImportsController {
     @Autowired
-    private ImportsServiceImpl importsService;
+    private ImportsService importsService;
 
     @GetMapping("/all")
     public ResponseEntity<List<Imports>> getAll() {

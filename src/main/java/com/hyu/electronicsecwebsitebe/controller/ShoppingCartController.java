@@ -2,7 +2,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 //huynt
 
 import com.hyu.electronicsecwebsitebe.model.ShoppingCart;
-import com.hyu.electronicsecwebsitebe.service.impl.ShoppingCartServiceImpl;
+import com.hyu.electronicsecwebsitebe.service.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/shopping-cart")
 public class ShoppingCartController {
     @Autowired
-    private ShoppingCartServiceImpl shoppingCartService;
+    private ShoppingCartService shoppingCartService;
 
     @GetMapping("/all")
     public ResponseEntity<List<ShoppingCart>> getAllShoppingCart() {

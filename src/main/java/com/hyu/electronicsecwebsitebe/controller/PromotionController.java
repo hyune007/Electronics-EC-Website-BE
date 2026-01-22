@@ -1,9 +1,8 @@
 package com.hyu.electronicsecwebsitebe.controller;
 //huynt
 
-import com.hyu.electronicsecwebsitebe.model.Product;
 import com.hyu.electronicsecwebsitebe.model.Promotion;
-import com.hyu.electronicsecwebsitebe.service.impl.PromotionServiceImpl;
+import com.hyu.electronicsecwebsitebe.service.PromotionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/promotion")
 public class PromotionController {
     @Autowired
-    private PromotionServiceImpl promotionService;
+    private PromotionService promotionService;
 
     @GetMapping("/all")
     public ResponseEntity<List<Promotion>> findAll() {
@@ -28,8 +27,8 @@ public class PromotionController {
         if (!promotionService.existsById (id)) {
             return ResponseEntity.notFound ().build ();
         }
-        Promotion promotion = promotionService.findById (id);
-        return ResponseEntity.ok (promotion);
+        Promotion foundPromotion = promotionService.findById (id);
+        return ResponseEntity.ok (foundPromotion);
     }
 
     @PostMapping("/save")

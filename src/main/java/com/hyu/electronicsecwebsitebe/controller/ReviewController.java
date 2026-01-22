@@ -2,7 +2,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 //huynt
 
 import com.hyu.electronicsecwebsitebe.model.Review;
-import com.hyu.electronicsecwebsitebe.service.impl.ReviewServiceImpl;
+import com.hyu.electronicsecwebsitebe.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/review")
 public class ReviewController {
     @Autowired
-    private ReviewServiceImpl reviewService;
+    private ReviewService reviewService;
 
     @GetMapping("/all")
     public ResponseEntity<List<Review>> getAllReviews() {
@@ -28,15 +28,6 @@ public class ReviewController {
             return ResponseEntity.notFound ().build ();
         }
         Review foundReview = reviewService.findById (id);
-        return ResponseEntity.ok (foundReview);
-    }
-
-    @GetMapping("/{id}/product/{productId}")
-    public ResponseEntity<Review> getReviewByProductId(@PathVariable String id, @PathVariable String productId) {
-        Review foundReview = reviewService.findByIdAndProductId (id, productId);
-        if (foundReview == null) {
-            return ResponseEntity.notFound ().build ();
-        }
         return ResponseEntity.ok (foundReview);
     }
 
@@ -82,7 +73,7 @@ public class ReviewController {
             return ResponseEntity.notFound ().build ();
         }
         review.setId (id);
-        Review updatedReview = reviewService.updateReview (id, review);
+        Review updatedReview = reviewService.updateReview (review);
         return ResponseEntity.ok (updatedReview);
     }
 

@@ -2,7 +2,7 @@ package com.hyu.electronicsecwebsitebe.controller;
 //huynt
 
 import com.hyu.electronicsecwebsitebe.model.ProductCategory;
-import com.hyu.electronicsecwebsitebe.service.impl.ProductCategoryServiceImpl;
+import com.hyu.electronicsecwebsitebe.service.ProductCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/product-category")
 public class ProductCategoryController {
     @Autowired
-    private ProductCategoryServiceImpl productCategoryService;
+    private ProductCategoryService productCategoryService;
 
     @GetMapping("/all")
     public ResponseEntity<List<ProductCategory>> getAllProductCategories() {
