@@ -17,8 +17,10 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-    @GetMapping("/page/{p}/category/{category}/keyword/{q}")
-    public ResponseEntity<Page<Product>> getProducts(@PathVariable int p, @PathVariable String category, @PathVariable String q) {
+    @GetMapping("/")
+    public ResponseEntity<Page<Product>> getProducts(@RequestParam(defaultValue = "0") int p,
+                                                     @RequestParam(required = false) String category,
+                                                     @RequestParam(required = false) String q) {
         Pageable pageable = PageRequest.of (p, 10);
         Page<Product> products = productService.getProducts (pageable, category, q);
         return ResponseEntity.ok (products);
