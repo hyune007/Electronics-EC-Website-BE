@@ -1,17 +1,16 @@
 package com.hyu.electronicsecwebsitebe.service.impl;
 
 import com.hyu.electronicsecwebsitebe.model.*;
-import com.hyu.electronicsecwebsitebe.repository.BillRepository;
-import com.hyu.electronicsecwebsitebe.repository.CustomerRepository;
-import com.hyu.electronicsecwebsitebe.repository.DetailBillRepository;
+import com.hyu.electronicsecwebsitebe.repository.*;
 import com.hyu.electronicsecwebsitebe.service.BillService;
-import com.hyu.electronicsecwebsitebe.service.ShoppingCartService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -24,25 +23,25 @@ public class BillServiceImpl implements BillService {
     private DetailBillRepository detailBillRepository;
 
     @Autowired
-    private ShoppingCartService shoppingCartService;
+    private ShoppingCartRepository shoppingCartRepository;
 
     @Autowired
-    private ProductServiceImpl productService;
+    private ProductRepository productRepository;
 
     @Autowired
     private CustomerRepository customerRepository;
 
-
     @Override
-    public List<Bill> findByCustomerId(String customerId) {
+    public List<Bill> findByCustomerId(String customerId){
         return billRepository.findByCustomerId(customerId);
     }
 
+
     @Transactional
     public Bill createbillfromcart(Customer customer, Employee employee, Address address, String paymentMethod) {
-        ShoppingCart cartItems = ShoppingCartServiceImpl.findByCustomerId(customer.getId());
+        List<ShoppingCart> cartItems = shoppingCartRepository.findByCustomerId(customer.getId());
 
-        if (cartItems == null) {
+        if (cartItems == null || cartItems.isEmpty()) {
             throw new RuntimeException("Giỏ hàng trống, không thể tạo hóa đơn");
         }
 
@@ -75,7 +74,10 @@ public class BillServiceImpl implements BillService {
             detailBill.setBill(savedBill);
             detailBill.setProduct(cartItem.getProduct());
             detailBill.setQuantity(cartItem.getQuantity());
-            detailBill.setTotal(cartItem.getProduct().getPrice() * cartItem.getQuantity());
+            detailBill.setTotal(
+                    cartItem.getProduct().getPrice()
+                            .multiply(BigDecimal.valueOf(cartItem.getQuantity()))
+            );
 
             // Lưu chi tiết hóa đơn
             detailBillRepository.save(detailBill);
@@ -83,16 +85,19 @@ public class BillServiceImpl implements BillService {
             // Cập nhật số lượng tồn kho
             Product product = cartItem.getProduct();
             product.setStock(product.getStock() - cartItem.getQuantity());
-            productService.save(product);
+            productRepository.save(product);
         }
 
         // Xóa giỏ hàng sau khi đã tạo hóa đơn
-        shoppingCartService.deleteById(customer.getId());
+//        shoppingCartRepository.deleteById(customer.getId());
 
         return savedBill;
     }
 
     private String generateBillId() {
         return "HD" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+    }
+    private String generateDetailBillId() {
+        return "CT" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
     }
 }

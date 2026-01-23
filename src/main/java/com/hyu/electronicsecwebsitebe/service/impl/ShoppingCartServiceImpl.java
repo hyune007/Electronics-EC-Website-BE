@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
@@ -24,7 +25,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCart findByCustomerId(String customerId) {
+    public List<ShoppingCart> findByCustomerId(String customerId) {
         return shoppingCartRepository.findByCustomerId (customerId);
     }
 

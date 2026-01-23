@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/shopping-cart")
@@ -24,7 +25,7 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/customer/{customerId}")
-    public ShoppingCart findByCustomerId(@PathVariable String customerId) {
+    public List<ShoppingCart> findByCustomerId(@PathVariable String customerId) {
         return shoppingCartService.findByCustomerId (customerId);
     }
 
