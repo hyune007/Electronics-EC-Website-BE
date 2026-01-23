@@ -1,8 +1,11 @@
 package com.hyu.electronicsecwebsitebe.controller;
+//huynt
 
 import com.hyu.electronicsecwebsitebe.model.Role;
-import com.hyu.electronicsecwebsitebe.service.impl.RoleServiceImpl;
+import com.hyu.electronicsecwebsitebe.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,31 +14,48 @@ import java.util.List;
 @RequestMapping("/api/role")
 public class RoleController {
     @Autowired
-    private RoleServiceImpl roleService;
+    private RoleService roleService;
 
     @GetMapping("/all")
-    public List<Role> getAllRoles() {
-        return roleService.getAllRoles ();
+    public ResponseEntity<List<Role>> getAllRoles() {
+        List<Role> listRoles = roleService.getAllRoles ();
+        return ResponseEntity.ok (listRoles);
     }
 
     @GetMapping("/{id}")
-    public Role findById(@PathVariable String id) {
-        return roleService.findById (id);
+    public ResponseEntity<Role> getRoleById(@PathVariable String id) {
+        if (!roleService.existsById (id)) {
+            return ResponseEntity.notFound ().build ();
+        }
+        Role foundRole = roleService.findById (id);
+        return ResponseEntity.ok (foundRole);
     }
 
     @PostMapping("/save")
-    public Role saveRole(@RequestBody Role role) {
-        return roleService.saveRole (role);
+    public ResponseEntity<Role> saveRole(@RequestBody Role role) {
+        if (roleService.existsById (role.getId ())) {
+            return ResponseEntity.badRequest ().build ();
+        }
+        Role savedRole = roleService.saveRole (role);
+        return ResponseEntity.status (HttpStatus.CREATED).body (savedRole);
     }
 
     @PutMapping("/update/{id}")
-    public Role updateRole(@PathVariable String id, @RequestBody Role role) {
+    public ResponseEntity<Role> updateRole(@PathVariable String id, @RequestBody Role role) {
+        if (!roleService.existsById (id)) {
+            return ResponseEntity.notFound ().build ();
+        }
         role.setId (id);
-        return roleService.updateRole (role);
+        Role updatedRole = roleService.updateRole (role);
+        return ResponseEntity.ok (updatedRole);
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteById(@PathVariable String id) {
+    public ResponseEntity<Void> deleteRole(@PathVariable String id) {
+        if (!roleService.existsById (id)) {
+            return ResponseEntity.notFound ().build ();
+        }
         roleService.deleteById (id);
+        return ResponseEntity.noContent ().build ();
     }
 }

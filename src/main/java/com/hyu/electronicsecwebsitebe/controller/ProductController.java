@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/product")
 public class ProductController {
     @Autowired
-    ProductService productService;
+    private ProductService productService;
 
     @GetMapping("/")
     public ResponseEntity<Page<Product>> getProducts(@RequestParam(defaultValue = "0") int p,

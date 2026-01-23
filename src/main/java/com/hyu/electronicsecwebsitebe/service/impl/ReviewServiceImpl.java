@@ -50,8 +50,13 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Review updateReview(String id, Review review) {
+    public Review updateReview(Review review) {
         return reviewRepository.save (review);
+    }
+
+    @Override
+    public boolean existsById(String id) {
+        return reviewRepository.existsById (id);
     }
 
     @Override

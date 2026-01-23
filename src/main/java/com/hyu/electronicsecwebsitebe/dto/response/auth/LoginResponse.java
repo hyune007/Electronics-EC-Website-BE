@@ -1,4 +1,4 @@
-package com.hyu.electronicsecwebsitebe.dto.response;
+package com.hyu.electronicsecwebsitebe.dto.response.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginResponse {
-    private String id;
-    private String name;
-    private String roleName;
+    boolean isAuthenticated;
+    String email;
+    String roleId;
 }

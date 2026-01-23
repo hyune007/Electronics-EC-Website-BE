@@ -13,5 +13,7 @@ public interface BrandService {
 
     Brand updateBrand(Brand brand);
 
+    boolean existsById(String id);
+
     void deleteById(String id);
 }

@@ -1,10 +1,16 @@
 package com.hyu.electronicsecwebsitebe.service.impl;
 
-import com.hyu.electronicsecwebsitebe.dto.response.LoginResponse;
+import com.hyu.electronicsecwebsitebe.dto.request.auth.LoginRequest;
+import com.hyu.electronicsecwebsitebe.dto.request.auth.RegisterRequest;
+import com.hyu.electronicsecwebsitebe.dto.response.auth.LoginResponse;
 import com.hyu.electronicsecwebsitebe.model.Customer;
+import com.hyu.electronicsecwebsitebe.model.Role;
 import com.hyu.electronicsecwebsitebe.repository.CustomerRepository;
+import com.hyu.electronicsecwebsitebe.repository.RoleRepository;
 import com.hyu.electronicsecwebsitebe.service.AuthService;
+import com.hyu.electronicsecwebsitebe.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,17 +18,62 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
     @Override
     public LoginResponse login(String email, String password) {
-        Customer customer = customerRepository.findByEmailAndPassword (email, password);
-        if (customer != null) {
-            String roleName = customer.getRole ().getName ();
+        Customer customer = customerRepository.findByEmail (email);
+        if (customer == null) {
+            return null;
+        }
+        boolean isPasswordMatch = passwordEncoder.matches (password, customer.getPassword ());
+        if (isPasswordMatch) {
+            String roleId = customer.getRole () != null ? customer.getRole ().getId () : null;
             return LoginResponse.builder ()
-                    .id (customer.getId ())
-                    .name (customer.getName ())
-                    .roleName (roleName)
+                    .email (email)
+                    .isAuthenticated (true)
+                    .roleId (roleId)
                     .build ();
         }
         return null;
+    }
+
+    @Override
+    public boolean isAuthenticated(LoginRequest loginRequest) {
+        Customer customer = customerRepository.findByEmail (loginRequest.getEmail ());
+        if (customer == null) {
+            return false;
+        }
+
+        return passwordEncoder.matches (loginRequest.getPassword (), customer.getPassword ());
+    }
+
+    @Override
+    public Customer register(RegisterRequest registerRequest) {
+        Customer existingCustomer = customerRepository.findByEmail (registerRequest.getEmail ());
+        if (existingCustomer != null) {
+            return null;
+        }
+
+        // Lấy role ROLE_CUSTOMER từ database
+        Role customerRole = roleRepository.findById ("ROLE_CUSTOMER")
+                .orElseThrow (() -> new RuntimeException ("Role ROLE_CUSTOMER không tồn tại trong hệ thống"));
+
+        Customer customer = new Customer ();
+        customer.setName (registerRequest.getName ());
+        customer.setEmail (registerRequest.getEmail ());
+        customer.setPassword (registerRequest.getPassword ());
+        customer.setPhone (registerRequest.getPhone ());
+        customer.setRole (customerRole);
+
+        return customerService.saveCustomer (customer);
     }
 }
