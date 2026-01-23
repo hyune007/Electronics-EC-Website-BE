@@ -16,9 +16,9 @@ public class AddressController {
     @Autowired
     AddressService addressService;
 
-    @GetMapping("/")
+    @GetMapping("/all")
     public ResponseEntity<List<Address>> getAll() {
-        List<Address> addresses = addressService.getAll();
+        List<Address> addresses = addressService.getAll ();
         return ResponseEntity.ok (addresses);
     }
 
@@ -33,7 +33,7 @@ public class AddressController {
 
     @PostMapping("/save")
     public ResponseEntity<Address> createAddress(@RequestBody Address address) {
-        if (addressService.existsById (address.getId ())||addressService.existsByAddress(address.getCity(), address.getWard(), address.getDetailAddress())) {
+        if (addressService.existsById (address.getId ()) || addressService.existsByAddress (address.getCity (), address.getWard (), address.getDetailAddress ())) {
             return ResponseEntity.badRequest ().build ();
         }
         Address createdAddress = addressService.createAddress (address);
