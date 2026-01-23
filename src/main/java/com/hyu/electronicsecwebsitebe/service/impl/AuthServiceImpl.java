@@ -63,7 +63,6 @@ public class AuthServiceImpl implements AuthService {
             return null;
         }
 
-        // Lấy role ROLE_CUSTOMER từ database
         Role customerRole = roleRepository.findById ("ROLE_CUSTOMER")
                 .orElseThrow (() -> new RuntimeException ("Role ROLE_CUSTOMER không tồn tại trong hệ thống"));
 
