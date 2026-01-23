@@ -28,8 +28,10 @@ public class BillServiceImpl implements BillService {
     @Autowired
     private ProductRepository productRepository;
 
-    @Autowired
-    private CustomerRepository customerRepository;
+    @Override
+    public List<Bill> getAllBills() {
+        return billRepository.findAll();
+    }
 
     @Override
     public List<Bill> findByCustomerId(String customerId){

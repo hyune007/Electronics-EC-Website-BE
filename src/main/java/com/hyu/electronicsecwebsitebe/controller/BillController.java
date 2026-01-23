@@ -19,8 +19,8 @@ import java.util.List;
 @RequestMapping("/api/bill")
 public class BillController {
 
-        @Autowired
-        BillServiceImpl billService;
+    @Autowired
+    BillServiceImpl billService;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -31,32 +31,50 @@ public class BillController {
     @Autowired
     private AddressRepository addressRepository;
 
-        @GetMapping("/customer/{id}")
-        public List<Bill> billByCustomer (String id) {
-            return billService.findByCustomerId(id);
-        }
+    @GetMapping("/all")
+    public List<Bill> getAllBills() {
+        return billService.getAllBills();
+    }
+
+//    @GetMapping("/customer/{id}")
+//    public List<Bill> billByCustomer (String id) {
+//        return billService.findByCustomerId(id);
+//    }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createBill(@RequestBody CreateBillRequest request) {
-
-        Customer customer = customerRepository.findById(request.getCustomerId())
+    public ResponseEntity<?> createBill(
+            @RequestParam String customerId,
+            @RequestParam(required = false) String employeeId,
+            @RequestParam String addressId,
+            @RequestParam String paymentMethod
+    ) {
+        Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
 
         Employee employee = null;
-        if (request.getEmployeeId() != null) {
-            employee = employeeRepository.findById(request.getEmployeeId()).orElse(null);
+        if (employeeId != null) {
+            employee = employeeRepository.findById(employeeId).orElse(null);
         }
 
-        Address address = addressRepository.findById(request.getAddressId())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy địa chỉ giao hàng"));
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy địa chỉ"));
 
-        Bill bill = billService.createbillfromcart(
-                customer,
-                employee,
-                address,
-                request.getPaymentMethod()
-        );
+        Bill bill = billService.createbillfromcart(customer, employee, address, paymentMethod);
 
         return ResponseEntity.ok(bill);
     }
 }
+/*
+INSERT INTO giohang (gh_id, sp_quantity, kh_id, sp_id)
+VALUES
+('GH0001', 1, 'KH001', 'SP001'),
+('GH0002', 2, 'KH001', 'SP003'),
+('GH0003', 1, 'KH001', 'SP081'),
+('GH0004', 1, 'KH002', 'SP014'),
+('GH0005', 1, 'KH002', 'SP072');
+
+INSERT INTO diachi (dc_id, kh_id, dc_city, dc_ward, dc_detailaddress, dc_is_default)
+VALUES ('DC001', 'KH001', 'Hồ Chí Minh', 'Quận 1', '123 Nguyễn Thị Minh Khai', 1);
+
+Đây là cái dữ liệu mẫu để test chức năng tạo hóa đơn từ giỏ hàng.   giohang trc diachi
+ */

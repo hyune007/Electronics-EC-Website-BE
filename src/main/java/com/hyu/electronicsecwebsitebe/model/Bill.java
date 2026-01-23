@@ -1,5 +1,6 @@
 package com.hyu.electronicsecwebsitebe.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -37,6 +38,7 @@ public class Bill {
     @JoinColumn(name = "dc_id")
     private Address address;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "bill")
     private List<DetailBill> detailBills = new ArrayList<> ();
 }
