@@ -17,5 +17,5 @@ public interface AddressService {
 
     boolean existsById(String id);
 
-    boolean existsByAddress(String city, String ward, String detailAddress);
+    boolean existsByAddress(String customerId, String city, String ward, String detailAddress);
 }

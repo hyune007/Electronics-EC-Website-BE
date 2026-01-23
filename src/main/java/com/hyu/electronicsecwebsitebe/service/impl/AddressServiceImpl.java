@@ -44,7 +44,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public boolean existsByAddress(String city, String ward, String detailAddress) {
-        return addressRepository.existsByCityAndWardAndDetailAddress(city, ward, detailAddress);
+    public boolean existsByAddress(String customerId, String city, String ward, String detailAddress) {
+        return addressRepository.existsByCustomerIdAndCityAndWardAndDetailAddress(customerId, city, ward, detailAddress);
     }
 }
