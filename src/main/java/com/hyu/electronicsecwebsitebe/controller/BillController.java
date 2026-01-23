@@ -32,8 +32,8 @@ public class BillController {
     private AddressRepository addressRepository;
 
     @GetMapping("/all")
-    public List<Bill> getAllBills() {
-        return billService.getAllBills();
+    public ResponseEntity<List<Bill>> getAllBills() {
+        return ResponseEntity.ok(billService.getAllBills());
     }
 
 //    @GetMapping("/customer/{id}")
