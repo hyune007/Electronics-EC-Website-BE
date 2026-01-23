@@ -1,7 +1,9 @@
 package com.hyu.electronicsecwebsitebe.controller; //huynt
 
-import com.hyu.electronicsecwebsitebe.dto.request.LoginRequest;
-import com.hyu.electronicsecwebsitebe.dto.response.LoginResponse;
+import com.hyu.electronicsecwebsitebe.dto.request.auth.LoginRequest;
+import com.hyu.electronicsecwebsitebe.dto.request.auth.RegisterRequest;
+import com.hyu.electronicsecwebsitebe.dto.response.auth.LoginResponse;
+import com.hyu.electronicsecwebsitebe.model.Customer;
 import com.hyu.electronicsecwebsitebe.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,16 @@ public class AuthController {
             return ResponseEntity.ok (loginResponse);
         } else {
             return ResponseEntity.status (HttpStatus.UNAUTHORIZED).body ("Email hoặc mật khẩu không đúng");
+        }
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
+        Customer customer = authService.register (registerRequest);
+        if (customer != null) {
+            return ResponseEntity.status (HttpStatus.CREATED).body ("Đăng ký thành công");
+        } else {
+            return ResponseEntity.status (HttpStatus.BAD_REQUEST).body ("Email đã tồn tại trong hệ thống");
         }
     }
 }

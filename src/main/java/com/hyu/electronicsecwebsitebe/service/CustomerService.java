@@ -18,4 +18,6 @@ public interface CustomerService {
     boolean existsById(String id);
 
     void deleteById(String id);
+
+    String generateNextId();
 }
