@@ -14,11 +14,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeRepository employeeRepository;
 
     @Override
-    public Page<Employee> getEmployees(Pageable pageable, String keyword) {
-        if(keyword==null||keyword.trim().isEmpty()){
+    public Page<Employee> getEmployees(Pageable pageable, String keyword, String roleId) {
+        if(roleId==null && (keyword==null||keyword.trim().isEmpty())){
             return employeeRepository.findAll(pageable);
         }
-        return employeeRepository.findByIdContainingIgnoreCaseOrNameContainingIgnoreCase(keyword, keyword, pageable);
+        if(roleId==null){
+            return employeeRepository.findByIdContainingIgnoreCaseOrNameContainingIgnoreCase(keyword, keyword, pageable);
+        }
+        if(keyword==null||keyword.trim().isEmpty()){
+            return employeeRepository.findByRoleId(roleId, pageable);
+        }
+        return employeeRepository.findByRoleAndKeyword(roleId, keyword, pageable);
     }
 
     @Override
