@@ -15,5 +15,9 @@ public interface CustomerService {
 
     Customer updateCustomer(Customer customer);
 
+    boolean existsById(String id);
+
     void deleteById(String id);
+
+    String generateNextId();
 }

@@ -13,5 +13,7 @@ public interface PromotionService {
 
     Promotion updatePromotion(Promotion promotion);
 
+    boolean existsById(String id);
+
     void deletePromotion(String id);
 }

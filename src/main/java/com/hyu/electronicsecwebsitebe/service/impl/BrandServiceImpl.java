@@ -32,6 +32,11 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
+    public boolean existsById(String id) {
+        return brandRepository.existsById (id);
+    }
+
+    @Override
     public void deleteById(String id) {
         brandRepository.deleteById (id);
     }

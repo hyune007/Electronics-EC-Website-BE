@@ -34,6 +34,11 @@ public class ImportsServiceImpl implements ImportsService {
     }
 
     @Override
+    public boolean existsById(String id) {
+        return importsRepository.existsById (id);
+    }
+
+    @Override
     public void deleteImports(String id) {
         importsRepository.deleteById (id);
     }

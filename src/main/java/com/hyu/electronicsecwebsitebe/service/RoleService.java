@@ -14,5 +14,7 @@ public interface RoleService {
 
     Role updateRole(Role role);
 
+    boolean existsById(String id);
+
     void deleteById(String id);
 }

@@ -34,6 +34,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public boolean existsById(String id) {
+        return roleRepository.existsById (id);
+    }
+
+    @Override
     public void deleteById(String id) {
         roleRepository.deleteById (id);
     }

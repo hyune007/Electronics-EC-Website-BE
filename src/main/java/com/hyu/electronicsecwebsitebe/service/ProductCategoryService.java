@@ -13,5 +13,7 @@ public interface ProductCategoryService {
 
     ProductCategory updateProductCategory(ProductCategory productCategory);
 
+    boolean existsById(String id);
+
     void deleteById(String id);
 }

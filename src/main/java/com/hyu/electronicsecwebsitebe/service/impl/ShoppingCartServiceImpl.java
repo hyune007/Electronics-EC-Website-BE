@@ -20,7 +20,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCart getShoppingCartById(String id) {
+    public ShoppingCart findById(String id) {
         return shoppingCartRepository.findById (id).orElse (null);
     }
 
@@ -37,6 +37,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public ShoppingCart updateShoppingCart(ShoppingCart shoppingCart) {
         return shoppingCartRepository.save (shoppingCart);
+    }
+
+    @Override
+    public boolean existsById(String id) {
+        return shoppingCartRepository.existsById (id);
     }
 
     @Override

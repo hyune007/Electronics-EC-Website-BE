@@ -19,7 +19,9 @@ public interface ReviewService {
 
     Review saveReview(Review review);
 
-    Review updateReview(String id, Review review);
+    Review updateReview(Review review);
+
+    boolean existsById(String id);
 
     void deleteReview(String id);
 }
