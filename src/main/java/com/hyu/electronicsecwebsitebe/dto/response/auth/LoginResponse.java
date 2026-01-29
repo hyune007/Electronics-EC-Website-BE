@@ -10,7 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginResponse {
-    boolean isAuthenticated;
-    String email;
-    String roleId;
+    String token;
 }

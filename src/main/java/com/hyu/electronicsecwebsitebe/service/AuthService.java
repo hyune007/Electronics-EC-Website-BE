@@ -11,4 +11,6 @@ public interface AuthService {
     boolean isAuthenticated(LoginRequest loginRequest);
 
     Customer register(RegisterRequest registerRequest);
+
+    String generateJWToken(String id, String roleId);
 }
