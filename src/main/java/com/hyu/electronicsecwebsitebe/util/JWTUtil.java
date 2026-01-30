@@ -61,19 +61,12 @@ public class JWTUtil {
             SignedJWT signedJWT = SignedJWT.parse (token);
             JWSVerifier verifier = new MACVerifier (secretKey.getBytes ());
 
-            // Verify signature and check expiration
             return signedJWT.verify (verifier) && !isTokenExpired (signedJWT);
         } catch (ParseException | JOSEException e) {
             return false;
         }
     }
 
-    /**
-     * Check if token is expired
-     *
-     * @param signedJWT Signed JWT object
-     * @return true if token is expired
-     */
     private boolean isTokenExpired(SignedJWT signedJWT) {
         try {
             Date expirationTime = signedJWT.getJWTClaimsSet ().getExpirationTime ();
@@ -83,12 +76,6 @@ public class JWTUtil {
         }
     }
 
-    /**
-     * Get user ID (subject) from token
-     *
-     * @param token JWT token string
-     * @return User ID
-     */
     public String getUserIdFromToken(String token) {
         try {
             SignedJWT signedJWT = SignedJWT.parse (token);
@@ -98,12 +85,6 @@ public class JWTUtil {
         }
     }
 
-    /**
-     * Get role ID from token
-     *
-     * @param token JWT token string
-     * @return Role ID
-     */
     public String getRoleIdFromToken(String token) {
         try {
             SignedJWT signedJWT = SignedJWT.parse (token);
@@ -113,12 +94,6 @@ public class JWTUtil {
         }
     }
 
-    /**
-     * Get all claims from token
-     *
-     * @param token JWT token string
-     * @return JWTClaimsSet containing all claims
-     */
     public JWTClaimsSet getClaimsFromToken(String token) {
         try {
             SignedJWT signedJWT = SignedJWT.parse (token);
@@ -128,12 +103,6 @@ public class JWTUtil {
         }
     }
 
-    /**
-     * Get expiration date from token
-     *
-     * @param token JWT token string
-     * @return Expiration date
-     */
     public Date getExpirationDateFromToken(String token) {
         try {
             SignedJWT signedJWT = SignedJWT.parse (token);
