@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class BillServiceImpl implements BillService {
@@ -30,14 +27,21 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public List<Bill> getAllBills() {
-        return billRepository.findAll();
+        List<Bill> bills = billRepository.findAll();
+        return bills;
     }
 
     @Override
     public List<Bill> findByCustomerId(String customerId){
-        return billRepository.findByCustomerId(customerId);
+        return  billRepository.findByCustomerId(customerId);
     }
 
+    public Bill updateBillStatus(String billId, String status) {
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy hóa đơn"));
+        bill.setStatus(status);
+        return billRepository.save(bill);
+    }
 
     @Transactional
     public Bill createbillfromcart(Customer customer, Employee employee, Address address, String paymentMethod) {
@@ -46,6 +50,8 @@ public class BillServiceImpl implements BillService {
         if (cartItems == null || cartItems.isEmpty()) {
             throw new RuntimeException("Giỏ hàng trống, không thể tạo hóa đơn");
         }
+
+        System.out.printf("Cac san pham trong gio hang: " + cartItems.size());
 
         // Tạo hóa đơn mới
         Bill bill = new Bill();
@@ -57,9 +63,9 @@ public class BillServiceImpl implements BillService {
 
         // Set trạng thái dựa trên phương thức thanh toán
         if ("Chuyển khoản ngân hàng".equals(paymentMethod)) {
-            bill.setStatus("Chưa thanh toán");
-        } else {
             bill.setStatus("Chờ xác nhận");
+        } else {
+            bill.setStatus("Chưa thanh toán");
         }
 
         bill.setCustomer(customer);
@@ -90,15 +96,26 @@ public class BillServiceImpl implements BillService {
             productRepository.save(product);
         }
 
-        // Xóa giỏ hàng sau khi đã tạo hóa đơn
-//        shoppingCartRepository.deleteById(customer.getId());
+        // Xóa giỏ hàng sau khi đã tạo hóa
+        shoppingCartRepository.deleteAll(cartItems);
+        //Debug
+//        System.out.printf("Đã xóa thành công\n");
 
         return savedBill;
     }
 
     private String generateBillId() {
-        return "HD" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+        return "HD" + String.valueOf((countBillEntities()+1));
     }
+    private int countBillEntities() {
+        return (int) billRepository.count();
+    }
+//    private String generateDetailBillId() {
+//        return "CT" + String.valueOf((countDetailBillEntities())+1);
+//    }
+//    private int countDetailBillEntities() {
+//        return (int) billRepository.count();
+//    }
     private String generateDetailBillId() {
         return "CT" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
     }

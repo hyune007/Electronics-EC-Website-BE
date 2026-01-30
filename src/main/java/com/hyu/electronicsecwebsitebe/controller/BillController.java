@@ -36,10 +36,20 @@ public class BillController {
         return ResponseEntity.ok(billService.getAllBills());
     }
 
-//    @GetMapping("/customer/{id}")
-//    public List<Bill> billByCustomer (String id) {
-//        return billService.findByCustomerId(id);
-//    }
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<List<Bill>> billByCustomerId (@PathVariable String customerId) {
+        List<Bill> bill = billService.findByCustomerId(customerId);
+        return ResponseEntity.ok(bill);
+    }
+// http://localhost:8080/api/bill/updatate-status/HD44C133?status=Hoàn thành giao dịch (Test url với method PUT)
+    @PutMapping("updatate-status/{billId}")
+    public ResponseEntity<?> updateBillStatus(
+            @PathVariable String billId,
+            @RequestParam String status
+    ) {
+        Bill updatedBill = billService.updateBillStatus(billId, status);
+        return ResponseEntity.ok(updatedBill);
+    }
 
     @PostMapping("/create")
     public ResponseEntity<?> createBill(
@@ -76,5 +86,5 @@ VALUES
 INSERT INTO diachi (dc_id, kh_id, dc_city, dc_ward, dc_detailaddress, dc_is_default)
 VALUES ('DC001', 'KH001', 'Hồ Chí Minh', 'Quận 1', '123 Nguyễn Thị Minh Khai', 1);
 
-Đây là cái dữ liệu mẫu để test chức năng tạo hóa đơn từ giỏ hàng.   giohang trc diachi
+Đây là cái dữ liệu mẫu để test chức năng tạo hóa đơn từ giỏ hàng. giohang trc diachi
  */
