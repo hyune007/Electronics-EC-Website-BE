@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api/product")
@@ -17,12 +19,18 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/")
+    @GetMapping("/all")
     public ResponseEntity<Page<Product>> getProducts(@RequestParam(defaultValue = "0") int p,
                                                      @RequestParam(required = false) String category,
-                                                     @RequestParam(required = false) String q) {
+                                                     @RequestParam(required = false) String brand,
+                                                     @RequestParam(required = false) String q,
+                                                     @RequestParam(defaultValue = "0") BigDecimal minPrice,
+                                                     @RequestParam(defaultValue = "0") BigDecimal maxPrice) {
+        if(minPrice.compareTo(maxPrice) > 0) {
+            return ResponseEntity.badRequest ().body(Page.empty());
+        }
         Pageable pageable = PageRequest.of (p, 10);
-        Page<Product> products = productService.getProducts (pageable, category, q);
+        Page<Product> products = productService.getProducts (pageable, category, brand, q, minPrice, maxPrice);
         return ResponseEntity.ok (products);
     }
 
