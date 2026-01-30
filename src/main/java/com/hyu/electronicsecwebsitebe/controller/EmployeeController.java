@@ -17,11 +17,12 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @GetMapping("/")
+    @GetMapping("/all")
     public ResponseEntity<Page<Employee>> getEmployees(@RequestParam(defaultValue = "0") int p,
-                                                       @RequestParam(required = false) String q) {
+                                                       @RequestParam(required = false) String q,
+                                                       @RequestParam(required = false) String role) {
         Pageable pageable = PageRequest.of (p, 10);
-        Page<Employee> employees = employeeService.getEmployees (pageable, q);
+        Page<Employee> employees = employeeService.getEmployees (pageable, q, role);
         return ResponseEntity.ok (employees);
     }
 
