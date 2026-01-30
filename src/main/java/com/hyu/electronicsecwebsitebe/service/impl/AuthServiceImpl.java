@@ -9,23 +9,16 @@ import com.hyu.electronicsecwebsitebe.repository.CustomerRepository;
 import com.hyu.electronicsecwebsitebe.repository.RoleRepository;
 import com.hyu.electronicsecwebsitebe.service.AuthService;
 import com.hyu.electronicsecwebsitebe.service.CustomerService;
-import com.nimbusds.jose.*;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jwt.JWTClaimsSet;
+import com.hyu.electronicsecwebsitebe.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-
 @Service
 public class AuthServiceImpl implements AuthService {
-    @Value("${spring.jwt.signerKey}")
-    private String SECRET_KEY;
+    @Autowired
+    private JWTUtil jwtUtil;
+
     @Autowired
     private CustomerRepository customerRepository;
 
@@ -45,14 +38,15 @@ public class AuthServiceImpl implements AuthService {
         if (customer == null) {
             return null;
         }
-        var token = generateJWToken (customer.getId (), customer.getRole ().getId ());
-        boolean isPasswordMatch = passwordEncoder.matches (password, customer.getPassword ());
-        if (isPasswordMatch) {
-            return LoginResponse.builder ()
-                    .token (token)
-                    .build ();
+
+        if (!passwordEncoder.matches (password, customer.getPassword ())) {
+            return null;
         }
-        return null;
+
+        var token = jwtUtil.generateToken (customer.getId (), customer.getRole ().getId ());
+        return LoginResponse.builder ()
+                .token (token)
+                .build ();
     }
 
     @Override
@@ -83,28 +77,5 @@ public class AuthServiceImpl implements AuthService {
         customer.setRole (customerRole);
 
         return customerService.saveCustomer (customer);
-    }
-
-    @Override
-    public String generateJWToken(String id, String roleId) {
-        JWSHeader jwsHeader = new JWSHeader (JWSAlgorithm.HS512);
-
-        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder ()
-                .subject (id)
-                .claim ("roleId", roleId)
-                .issueTime (new Date ())
-                .expirationTime (new Date (Instant.now ().plus (30, ChronoUnit.DAYS).toEpochMilli ()))
-                .build ();
-
-        Payload payload = new Payload (jwtClaimsSet.toJSONObject ());
-
-        JWSObject jwsObject = new JWSObject (jwsHeader, payload);
-
-        try {
-            jwsObject.sign (new MACSigner (SECRET_KEY.getBytes ()));
-            return jwsObject.serialize ();
-        } catch (JOSEException e) {
-            throw new RuntimeException (e);
-        }
     }
 }
