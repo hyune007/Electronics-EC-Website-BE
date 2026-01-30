@@ -22,12 +22,13 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
-        LoginResponse loginResponse = authService.login (loginRequest.getEmail (), loginRequest.getPassword ());
-        if (loginResponse != null) {
-            return ResponseEntity.ok (loginResponse);
-        } else {
-            return ResponseEntity.status (HttpStatus.UNAUTHORIZED).body ("Email hoặc mật khẩu không đúng");
+        if (!authService.isAuthenticated (loginRequest)) {
+            return ResponseEntity.status (HttpStatus.UNAUTHORIZED)
+                    .body ("Email hoặc mật khẩu không đúng");
         }
+        LoginResponse loginResponse =
+                authService.login (loginRequest.getEmail (), loginRequest.getPassword ());
+        return ResponseEntity.ok (loginResponse);
     }
 
     @PostMapping("/register")

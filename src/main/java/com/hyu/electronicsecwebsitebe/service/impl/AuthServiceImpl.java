@@ -24,7 +24,7 @@ import java.util.Date;
 
 @Service
 public class AuthServiceImpl implements AuthService {
-    @Value("${JWT_SIGNER_KEY}")
+    @Value("${spring.jwt.signerKey}")
     private String SECRET_KEY;
     @Autowired
     private CustomerRepository customerRepository;
@@ -55,15 +55,15 @@ public class AuthServiceImpl implements AuthService {
         return null;
     }
 
-//    @Override
-//    public boolean isAuthenticated(LoginRequest loginRequest) {
-//        Customer customer = customerRepository.findByEmail (loginRequest.getEmail ());
-//        if (customer == null) {
-//            return false;
-//        }
-//
-//        return passwordEncoder.matches (loginRequest.getPassword (), customer.getPassword ());
-//    }
+    @Override
+    public boolean isAuthenticated(LoginRequest loginRequest) {
+        Customer customer = customerRepository.findByEmail (loginRequest.getEmail ());
+        if (customer == null) {
+            return false;
+        }
+
+        return passwordEncoder.matches (loginRequest.getPassword (), customer.getPassword ());
+    }
 
     @Override
     public Customer register(RegisterRequest registerRequest) {

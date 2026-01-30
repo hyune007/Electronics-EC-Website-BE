@@ -5,7 +5,9 @@ spring:
   application:
     name: Electronics-EC-Website-BE
 
-
+  # JWT
+  jwt:
+    signerKey: ${JWT_SECRET}
   # MySQL DataSource
   datasource:
     url: ${DB_URL}
