@@ -21,13 +21,6 @@ public class JWTUtil {
     @Value("${spring.jwt.signerKey}")
     private String secretKey;
 
-    /**
-     * Generate JWT token
-     *
-     * @param id     User ID
-     * @param roleId User role ID
-     * @return JWT token string
-     */
     public String generateToken(String id, String roleId) {
         JWSHeader jwsHeader = new JWSHeader (JWSAlgorithm.HS512);
 
@@ -50,12 +43,6 @@ public class JWTUtil {
         }
     }
 
-    /**
-     * Validate JWT token
-     *
-     * @param token JWT token string
-     * @return true if token is valid, false otherwise
-     */
     public boolean validateToken(String token) {
         try {
             SignedJWT signedJWT = SignedJWT.parse (token);
