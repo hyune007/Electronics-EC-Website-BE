@@ -8,7 +8,9 @@ import com.hyu.electronicsecwebsitebe.model.Customer;
 public interface AuthService {
     LoginResponse login(String email, String password);
 
-    boolean isAuthenticated(LoginRequest loginRequest);
+//    boolean isAuthenticated(LoginRequest loginRequest);
 
     Customer register(RegisterRequest registerRequest);
+
+    String generateJWToken(String id, String roleId);
 }
