@@ -4,8 +4,10 @@ import com.hyu.electronicsecwebsitebe.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
+
 public interface ProductService {
-    Page<Product> getProducts(Pageable pageable, String categoryId, String keyword);
+    Page<Product> getProducts(Pageable pageable, String categoryId, String brandId, String keyword, BigDecimal minPrice, BigDecimal maxPrice);
 
     Product findById(String id);
 

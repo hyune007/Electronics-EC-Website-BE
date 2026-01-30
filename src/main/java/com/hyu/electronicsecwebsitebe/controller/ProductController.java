@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 @CrossOrigin("*")
 @RestController
@@ -17,12 +20,26 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/")
+    @GetMapping("/all")
     public ResponseEntity<Page<Product>> getProducts(@RequestParam(defaultValue = "0") int p,
                                                      @RequestParam(required = false) String category,
-                                                     @RequestParam(required = false) String q) {
-        Pageable pageable = PageRequest.of (p, 10);
-        Page<Product> products = productService.getProducts (pageable, category, q);
+                                                     @RequestParam(required = false) String brand,
+                                                     @RequestParam(required = false) String q,
+                                                     @RequestParam(defaultValue = "0") BigDecimal minPrice,
+                                                     @RequestParam(defaultValue = "0") BigDecimal maxPrice,
+                                                     @RequestParam(required = false) String priceSort) {
+        if(minPrice.compareTo(maxPrice) > 0) {
+            return ResponseEntity.badRequest ().body(Page.empty());
+        }
+        Sort sort = Sort.unsorted();
+
+        if ("asc".equalsIgnoreCase(priceSort)) {
+            sort = Sort.by("price").ascending();
+        } else if ("desc".equalsIgnoreCase(priceSort)) {
+            sort = Sort.by("price").descending();
+        }
+        Pageable pageable = PageRequest.of (p, 10, sort);
+        Page<Product> products = productService.getProducts (pageable, category, brand, q, minPrice, maxPrice);
         return ResponseEntity.ok (products);
     }
 
