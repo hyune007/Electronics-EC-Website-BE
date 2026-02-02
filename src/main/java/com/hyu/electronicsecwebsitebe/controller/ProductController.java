@@ -38,7 +38,7 @@ public class ProductController {
         } else if ("desc".equalsIgnoreCase(priceSort)) {
             sort = Sort.by("price").descending();
         }
-        Pageable pageable = PageRequest.of (p, 10, sort);
+        Pageable pageable = PageRequest.of (p, 12, sort);
         Page<Product> products = productService.getProducts (pageable, category, brand, q, minPrice, maxPrice);
         return ResponseEntity.ok (products);
     }
