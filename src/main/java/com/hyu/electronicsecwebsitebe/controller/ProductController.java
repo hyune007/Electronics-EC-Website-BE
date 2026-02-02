@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @CrossOrigin("*")
 @RestController
@@ -23,8 +24,9 @@ public class ProductController {
     @GetMapping("/all")
     public ResponseEntity<Page<Product>> getProducts(@RequestParam(defaultValue = "0") int p,
                                                      @RequestParam(required = false) String category,
-                                                     @RequestParam(required = false) String brand,
+                                                     @RequestParam(required = false) List<String> brand,
                                                      @RequestParam(required = false) String q,
+                                                     @RequestParam(required = false) List<String> priceRanges,
                                                      @RequestParam(defaultValue = "0") BigDecimal minPrice,
                                                      @RequestParam(defaultValue = "0") BigDecimal maxPrice,
                                                      @RequestParam(required = false) String priceSort) {
@@ -38,8 +40,8 @@ public class ProductController {
         } else if ("desc".equalsIgnoreCase(priceSort)) {
             sort = Sort.by("price").descending();
         }
-        Pageable pageable = PageRequest.of (p, 10, sort);
-        Page<Product> products = productService.getProducts (pageable, category, brand, q, minPrice, maxPrice);
+        Pageable pageable = PageRequest.of (p, 12, sort);
+        Page<Product> products = productService.getProducts (pageable, category, brand, q, priceRanges, minPrice, maxPrice);
         return ResponseEntity.ok (products);
     }
 
