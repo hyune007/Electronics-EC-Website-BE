@@ -31,51 +31,56 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
     @Override
     public LoginResponse login(String email, String password) {
-        Customer customer = customerRepository.findByEmail (email);
+        Customer customer = customerRepository.findByEmail(email);
         if (customer == null) {
             return null;
         }
 
-        if (!passwordEncoder.matches (password, customer.getPassword ())) {
+        if (!passwordEncoder.matches(password, customer.getPassword())) {
             return null;
         }
 
-        var token = jwtUtil.generateToken (customer.getId (), customer.getRole ().getId ());
-        return LoginResponse.builder ()
-                .token (token)
-                .build ();
+        String token = jwtUtil.generateToken(customer.getId(), customer.getRole().getId());
+
+        return LoginResponse.builder()
+                .token(token)
+                .userId(customer.getId())
+                .name(customer.getName())
+                .email(customer.getEmail())
+                .roleId(customer.getRole().getId())
+                .roleName(customer.getRole().getName())
+                .build();
     }
 
     @Override
     public boolean isAuthenticated(LoginRequest loginRequest) {
-        Customer customer = customerRepository.findByEmail (loginRequest.getEmail ());
+        Customer customer = customerRepository.findByEmail(loginRequest.getEmail());
         if (customer == null) {
             return false;
         }
 
-        return passwordEncoder.matches (loginRequest.getPassword (), customer.getPassword ());
+        return passwordEncoder.matches(loginRequest.getPassword(), customer.getPassword());
     }
 
     @Override
     public Customer register(RegisterRequest registerRequest) {
-        Customer existingCustomer = customerRepository.findByEmail (registerRequest.getEmail ());
+        Customer existingCustomer = customerRepository.findByEmail(registerRequest.getEmail());
         if (existingCustomer != null) {
             return null;
         }
 
-        Role customerRole = roleRepository.findById ("ROLE_CUSTOMER")
-                .orElseThrow (() -> new RuntimeException ("Role ROLE_CUSTOMER không tồn tại trong hệ thống"));
+        Role customerRole = roleRepository.findById("ROLE_CUSTOMER")
+                .orElseThrow(() -> new RuntimeException("Role ROLE_CUSTOMER không tồn tại trong hệ thống"));
 
-        Customer customer = new Customer ();
-        customer.setName (registerRequest.getName ());
-        customer.setEmail (registerRequest.getEmail ());
-        customer.setPassword (registerRequest.getPassword ());
-        customer.setPhone (registerRequest.getPhone ());
-        customer.setRole (customerRole);
+        Customer customer = new Customer();
+        customer.setName(registerRequest.getName());
+        customer.setEmail(registerRequest.getEmail());
+        customer.setPassword(registerRequest.getPassword());
+        customer.setPhone(registerRequest.getPhone());
+        customer.setRole(customerRole);
 
-        return customerService.saveCustomer (customer);
+        return customerService.saveCustomer(customer);
     }
 }
