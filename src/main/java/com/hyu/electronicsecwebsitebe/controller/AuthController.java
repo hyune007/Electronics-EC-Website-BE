@@ -18,49 +18,49 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    // ==================== CUSTOMER ====================
+    // CUSTOMER
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
-        if (!authService.isAuthenticated(loginRequest)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Email hoặc mật khẩu không đúng");
+        if (!authService.isAuthenticated (loginRequest)) {
+            return ResponseEntity.status (HttpStatus.UNAUTHORIZED)
+                    .body ("Email hoặc mật khẩu không đúng");
         }
-        LoginResponse loginResponse = authService.login(loginRequest.getEmail(), loginRequest.getPassword());
-        return ResponseEntity.ok(loginResponse);
+        LoginResponse loginResponse = authService.login (loginRequest.getEmail (), loginRequest.getPassword ());
+        return ResponseEntity.ok (loginResponse);
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
-        Customer customer = authService.register(registerRequest);
+        Customer customer = authService.register (registerRequest);
         if (customer != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Đăng ký thành công");
+            return ResponseEntity.status (HttpStatus.CREATED).body ("Đăng ký thành công");
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email đã tồn tại trong hệ thống");
+            return ResponseEntity.status (HttpStatus.BAD_REQUEST).body ("Email đã tồn tại trong hệ thống");
         }
     }
 
-    // ==================== EMPLOYEE ====================
+    // EMPLOYEE
 
     @PostMapping("/employee/login")
     public ResponseEntity<?> loginEmployee(@Valid @RequestBody LoginRequest loginRequest) {
-        if (!authService.isAuthenticatedEmployee(loginRequest)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Email hoặc mật khẩu không đúng");
+        if (!authService.isAuthenticatedEmployee (loginRequest)) {
+            return ResponseEntity.status (HttpStatus.UNAUTHORIZED)
+                    .body ("Email hoặc mật khẩu không đúng");
         }
-        LoginResponse loginResponse = authService.loginEmployee(loginRequest.getEmail(), loginRequest.getPassword());
-        return ResponseEntity.ok(loginResponse);
+        LoginResponse loginResponse = authService.loginEmployee (loginRequest.getEmail (), loginRequest.getPassword ());
+        return ResponseEntity.ok (loginResponse);
     }
 
     @PostMapping("/employee/register")
     public ResponseEntity<?> registerEmployee(
             @Valid @RequestBody RegisterRequest registerRequest,
             @RequestParam(defaultValue = "ROLE_EMPLOYEE") String roleId) {
-        Employee employee = authService.registerEmployee(registerRequest, roleId);
+        Employee employee = authService.registerEmployee (registerRequest, roleId);
         if (employee != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Đăng ký nhân viên thành công");
+            return ResponseEntity.status (HttpStatus.CREATED).body ("Đăng ký nhân viên thành công");
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email đã tồn tại trong hệ thống");
+            return ResponseEntity.status (HttpStatus.BAD_REQUEST).body ("Email đã tồn tại trong hệ thống");
         }
     }
 }
