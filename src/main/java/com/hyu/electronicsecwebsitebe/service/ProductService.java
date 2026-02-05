@@ -5,9 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface ProductService {
-    Page<Product> getProducts(Pageable pageable, String categoryId, String brandId, String keyword, BigDecimal minPrice, BigDecimal maxPrice);
+    Page<Product> getProducts(Pageable pageable, String categoryId, List<String> brandIds, String keyword, List<String> priceRanges, BigDecimal minPrice, BigDecimal maxPrice);
 
     Product findById(String id);
 

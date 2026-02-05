@@ -35,4 +35,14 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "sp_brand_id")
     private Brand brand;
+
+    public String getImage() {
+        if (image == null || image.isBlank()) return null;
+        // Lấy folder theo category
+        String categoryFolder="";
+        if (category != null && category.getId() != null) {
+            categoryFolder = category.getId();
+        }
+        return "/photos/products/" + categoryFolder + "/" + image;
+    }
 }

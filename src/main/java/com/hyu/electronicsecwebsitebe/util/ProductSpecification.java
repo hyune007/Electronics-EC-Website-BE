@@ -1,9 +1,12 @@
 package com.hyu.electronicsecwebsitebe.util;
 
 import com.hyu.electronicsecwebsitebe.model.Product;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductSpecification {
 
@@ -13,10 +16,14 @@ public class ProductSpecification {
                         : cb.equal(root.get("category").get("id"), categoryId);
     }
 
-    public static Specification<Product> hasBrand(String brandId) {
+    public static Specification<Product> hasBrands(List<String> brandIds) {
         return (root, query, cb) ->
-                brandId == null ? cb.conjunction()
-                        : cb.equal(root.get("brand").get("id"), brandId);
+        {
+            if (brandIds == null || brandIds.isEmpty()) {
+                return cb.conjunction();
+            }
+            return root.get("brand").get("id").in(brandIds);
+        };
     }
 
     public static Specification<Product> hasKeyword(String keyword) {
@@ -40,4 +47,20 @@ public class ProductSpecification {
             return cb.conjunction();
         };
     }
+
+    public static Specification<Product> priceInRanges(List<String> priceRanges) {
+        return (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            for (String r : priceRanges) {
+                String[] p = r.split("-");
+                BigDecimal min = new BigDecimal(p[0]);
+                BigDecimal max = new BigDecimal(p[1]);
+                predicates.add(cb.between(root.get("price"), min, max));
+            }
+
+            return cb.or(predicates.toArray(new Predicate[0]));
+        };
+    }
+
 }
