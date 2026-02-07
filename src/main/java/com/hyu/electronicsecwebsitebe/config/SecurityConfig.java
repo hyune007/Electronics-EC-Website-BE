@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.config.Customizer;
 
 @Configuration
 @EnableWebSecurity
@@ -35,10 +36,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // PUBLIC
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/product/**").permitAll()
@@ -46,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/product-category/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/promotion/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/review/product/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/photos/**").permitAll()
 
                         // CUSTOMER+
                         .requestMatchers(HttpMethod.GET, "/api/shopping-cart/customer/**")
@@ -58,6 +61,8 @@ public class SecurityConfig {
                         .hasAnyAuthority(ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
 
                         .requestMatchers(HttpMethod.GET, "/api/customer/{id}")
+                        .hasAnyAuthority(ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.GET, "/api/customer/me")
                         .hasAnyAuthority(ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
                         .requestMatchers(HttpMethod.PUT, "/api/customer/update/**")
                         .hasAnyAuthority(ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
@@ -134,8 +139,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/customer/delete/**")
                         .hasAuthority(ROLE_ADMIN)
 
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
