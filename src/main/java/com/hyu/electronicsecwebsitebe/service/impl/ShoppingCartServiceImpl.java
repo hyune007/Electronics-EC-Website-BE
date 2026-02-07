@@ -24,7 +24,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public ShoppingCart findByCustomerId(String customerId) {
+    public List<ShoppingCart> findByCustomerId(String customerId) {
         return shoppingCartRepository.findByCustomerId (customerId);
     }
 
