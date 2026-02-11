@@ -3,6 +3,7 @@ package com.hyu.electronicsecwebsitebe.service.impl;
 import com.hyu.electronicsecwebsitebe.model.Address;
 import com.hyu.electronicsecwebsitebe.repository.AddressRepository;
 import com.hyu.electronicsecwebsitebe.service.AddressService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,8 @@ import java.util.List;
 
 @Service
 public class AddressServiceImpl implements AddressService {
+    private static final int MAX_ADDRESS = 5;
+
     @Autowired
     private AddressRepository addressRepository;
 
@@ -19,32 +22,64 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
+    public List<Address> getAddressesByCustomerId(String id) {
+        return addressRepository.findByCustomer_Id(id);
+    }
+
+    @Override
     public Address findById(String id) {
-        return addressRepository.findById (id).orElse (null);
+        return addressRepository.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Address not found: " + id));
     }
 
     @Override
     public Address createAddress(Address address) {
-        return addressRepository.save (address);
+        String customerId = address.getCustomer().getId();
+
+        long count = addressRepository.countByCustomer_Id(customerId);
+        if (count >= MAX_ADDRESS) {
+            throw new IllegalStateException(
+                    "Mỗi khách hàng chỉ được tối đa " + MAX_ADDRESS + " địa chỉ"
+            );
+        }
+
+        boolean exists = addressRepository
+                .existsByCustomer_IdAndCityAndWardAndDetailAddress(
+                        customerId,
+                        address.getCity(),
+                        address.getWard(),
+                        address.getDetailAddress()
+                );
+
+        if (exists) {
+            throw new IllegalArgumentException("Địa chỉ đã tồn tại");
+        }
+
+        return addressRepository.save(address);
     }
 
     @Override
-    public Address updateAddress(Address address) {
-        return addressRepository.save (address);
+    public Address updateAddress(String id, Address address) {
+
+        Address existing = findById(id);
+
+        address.setId(existing.getId());
+        address.setCustomer(existing.getCustomer());
+
+        return addressRepository.save(address);
     }
 
     @Override
     public void deleteById(String id) {
-        addressRepository.deleteById (id);
+        if (!addressRepository.existsById(id)) {
+            throw new EntityNotFoundException("Address not found: " + id);
+        }
+        addressRepository.deleteById(id);
     }
 
     @Override
     public boolean existsById(String id) {
         return addressRepository.existsById (id);
-    }
-
-    @Override
-    public boolean existsByAddress(String customerId, String city, String ward, String detailAddress) {
-        return addressRepository.existsByCustomerIdAndCityAndWardAndDetailAddress(customerId, city, ward, detailAddress);
     }
 }

@@ -22,39 +22,38 @@ public class AddressController {
         return ResponseEntity.ok (addresses);
     }
 
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<List<Address>> getAddressesByCustomerId(@PathVariable String customerId) {
+        List<Address> addresses = addressService.getAddressesByCustomerId(customerId);
+        return ResponseEntity.ok (addresses);
+    }
+
     @GetMapping("/detail/{id}")
     public ResponseEntity<Address> getAddressById(@PathVariable String id) {
-        if (!addressService.existsById (id)) {
-            return ResponseEntity.notFound ().build ();
-        }
         Address address = addressService.findById (id);
         return ResponseEntity.ok (address);
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Address> createAddress(@RequestBody Address address) {
-        if (addressService.existsById (address.getId ()) || addressService.existsByAddress (address.getCustomer().getId(), address.getCity (), address.getWard (), address.getDetailAddress ())) {
-            return ResponseEntity.badRequest ().build ();
+    public ResponseEntity<?> createAddress(@RequestBody Address address) {
+        try {
+            Address createdAddress = addressService.createAddress(address);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdAddress);
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
         }
-        Address createdAddress = addressService.createAddress (address);
-        return ResponseEntity.status (HttpStatus.CREATED).body (createdAddress);
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Address> updateAddress(@PathVariable String id, @RequestBody Address address) {
-        if (!addressService.existsById (id)) {
-            return ResponseEntity.notFound ().build ();
-        }
-        address.setId (id);
-        Address updatedAddress = addressService.updateAddress (address);
+        Address updatedAddress = addressService.updateAddress (id, address);
         return ResponseEntity.ok (updatedAddress);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteAddress(@PathVariable String id) {
-        if (!addressService.existsById (id)) {
-            return ResponseEntity.notFound ().build ();
-        }
         addressService.deleteById (id);
         return ResponseEntity.noContent ().build ();
     }
