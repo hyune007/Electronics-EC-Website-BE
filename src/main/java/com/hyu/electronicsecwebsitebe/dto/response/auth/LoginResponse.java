@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LoginResponse {
     private String token;
-    private String userId;
-    private String name;
-    private String email;
-    private String roleId;
-    private String roleName;
+//    private String userId;
+//    private String name;
+//    private String email;
+//    private String roleId;
+//    private String roleName;
 }

@@ -1,6 +1,7 @@
 package com.hyu.electronicsecwebsitebe.service.impl;
 
 import com.hyu.electronicsecwebsitebe.dto.request.auth.LoginRequest;
+import com.hyu.electronicsecwebsitebe.dto.request.auth.RegisterEmployeeRequest;
 import com.hyu.electronicsecwebsitebe.dto.request.auth.RegisterRequest;
 import com.hyu.electronicsecwebsitebe.dto.response.auth.LoginResponse;
 import com.hyu.electronicsecwebsitebe.model.Customer;
@@ -57,11 +58,11 @@ public class AuthServiceImpl implements AuthService {
 
         return LoginResponse.builder ()
                 .token (token)
-                .userId (customer.getId ())
-                .name (customer.getName ())
-                .email (customer.getEmail ())
-                .roleId (customer.getRole ().getId ())
-                .roleName (customer.getRole ().getName ())
+//                .userId (customer.getId ())
+//                .name (customer.getName ())
+//                .email (customer.getEmail ())
+//                .roleId (customer.getRole ().getId ())
+//                .roleName (customer.getRole ().getName ())
                 .build ();
     }
 
@@ -111,11 +112,11 @@ public class AuthServiceImpl implements AuthService {
 
         return LoginResponse.builder ()
                 .token (token)
-                .userId (employee.getId ())
-                .name (employee.getName ())
-                .email (employee.getEmail ())
-                .roleId (employee.getRole ().getId ())
-                .roleName (employee.getRole ().getName ())
+//                .userId (employee.getId ())
+//                .name (employee.getName ())
+//                .email (employee.getEmail ())
+//                .roleId (employee.getRole ().getId ())
+//                .roleName (employee.getRole ().getName ())
                 .build ();
     }
 
@@ -129,21 +130,23 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Employee registerEmployee(RegisterRequest registerRequest, String roleId) {
-        Employee existingEmployee = employeeRepository.findByEmail (registerRequest.getEmail ());
+    public Employee registerEmployee(RegisterEmployeeRequest registerEmployeeRequest) {
+        Employee existingEmployee = employeeRepository.findByEmail (registerEmployeeRequest.getEmail ());
         if (existingEmployee != null) {
             return null;
         }
 
-        Role role = roleRepository.findById (roleId)
-                .orElseThrow (() -> new RuntimeException ("Role " + roleId + " không tồn tại trong hệ thống"));
+        Role employeeRole = roleRepository.findById ("ROLE_EMPLOYEE")
+                .orElseThrow (() -> new RuntimeException ("Role ROLE_EMPLOYEE không tồn tại trong hệ thống"));
 
         Employee employee = new Employee ();
-        employee.setName (registerRequest.getName ());
-        employee.setEmail (registerRequest.getEmail ());
-        employee.setPassword (passwordEncoder.encode (registerRequest.getPassword ()));
-        employee.setPhone (registerRequest.getPhone ());
-        employee.setRole (role);
+        employee.setName (registerEmployeeRequest.getName ());
+        employee.setEmail (registerEmployeeRequest.getEmail ());
+        employee.setPassword (registerEmployeeRequest.getPassword ());
+        employee.setPhone (registerEmployeeRequest.getPhone ());
+        employee.setAddress (registerEmployeeRequest.getAddress ());
+        employee.setBirthday (registerEmployeeRequest.getBirthDate ());
+        employee.setRole (employeeRole);
 
         return employeeService.createEmployee (employee);
     }

@@ -1,6 +1,7 @@
 package com.hyu.electronicsecwebsitebe.controller;
 
 import com.hyu.electronicsecwebsitebe.dto.request.auth.LoginRequest;
+import com.hyu.electronicsecwebsitebe.dto.request.auth.RegisterEmployeeRequest;
 import com.hyu.electronicsecwebsitebe.dto.request.auth.RegisterRequest;
 import com.hyu.electronicsecwebsitebe.dto.response.auth.LoginResponse;
 import com.hyu.electronicsecwebsitebe.model.Customer;
@@ -54,9 +55,8 @@ public class AuthController {
 
     @PostMapping("/employee/register")
     public ResponseEntity<?> registerEmployee(
-            @Valid @RequestBody RegisterRequest registerRequest,
-            @RequestParam(defaultValue = "ROLE_EMPLOYEE") String roleId) {
-        Employee employee = authService.registerEmployee (registerRequest, roleId);
+            @Valid @RequestBody RegisterEmployeeRequest registerEmployeeRequestRequest) {
+        Employee employee = authService.registerEmployee (registerEmployeeRequestRequest);
         if (employee != null) {
             return ResponseEntity.status (HttpStatus.CREATED).body ("Đăng ký nhân viên thành công");
         } else {
