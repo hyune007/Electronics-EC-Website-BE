@@ -39,16 +39,33 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer updateCustomer(Customer customer) {
-        if (customer.getPassword () != null && !customer.getPassword ().isEmpty ()) {
-            if (!customer.getPassword ().startsWith ("$2a$") &&
-                    !customer.getPassword ().startsWith ("$2b$") &&
-                    !customer.getPassword ().startsWith ("$2y$")) {
-                String hashedPassword = passwordEncoder.encode (customer.getPassword ());
-                customer.setPassword (hashedPassword);
+        Customer existing = customerRepository.findById(customer.getId())
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+        if(customer.getName()!=null && !customer.getName().isEmpty()){
+            existing.setName(customer.getName());
+        }
+        if(customer.getEmail()!=null && !customer.getEmail().isEmpty()){
+            existing.setEmail(customer.getEmail());
+        }
+        if(customer.getPhone()!=null && !customer.getPhone().isEmpty()){
+            existing.setPhone(customer.getPhone());
+        }
+        if (customer.getPassword() != null && !customer.getPassword().isEmpty()) {
+            if (!customer.getPassword().startsWith("$2a$")
+                    && !customer.getPassword().startsWith("$2b$")
+                    && !customer.getPassword().startsWith("$2y$")) {
+                String hashedPassword = passwordEncoder.encode(customer.getPassword());
+                existing.setPassword(hashedPassword);
+            } else {
+                existing.setPassword(customer.getPassword());
             }
         }
-        return customerRepository.save (customer);
+        if (customer.getRole() != null) {
+            existing.setRole(customer.getRole());
+        }
+        return customerRepository.save(existing);
     }
+
 
     @Override
     public boolean existsById(String id) {
