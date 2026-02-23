@@ -6,6 +6,7 @@ import com.hyu.electronicsecwebsitebe.service.AddressService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -81,5 +82,29 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public boolean existsById(String id) {
         return addressRepository.existsById (id);
+    }
+
+    @Override
+    @Transactional
+    public Address setDefaultAddress(String id) {
+
+        Address address = addressRepository.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Address not found: " + id));
+        String customerId = address.getCustomer().getId();
+
+        List<Address> addresses =
+                addressRepository.findByCustomer_Id(customerId);
+
+        for (Address a : addresses) {
+            if (a.isDefault()) {
+                a.setDefault(false);
+            }
+        }
+
+        address.setDefault(true);
+
+        addressRepository.saveAll(addresses);
+        return addressRepository.save(address);
     }
 }
