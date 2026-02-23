@@ -16,4 +16,6 @@ public interface EmployeeService {
     void deleteById(String id);
 
     boolean existsById(String id);
+
+    String generateNextId();
 }
