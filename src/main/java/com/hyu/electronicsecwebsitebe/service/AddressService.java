@@ -18,4 +18,6 @@ public interface AddressService {
     void deleteById(String id);
 
     boolean existsById(String id);
+
+    Address setDefaultAddress(String id);
 }

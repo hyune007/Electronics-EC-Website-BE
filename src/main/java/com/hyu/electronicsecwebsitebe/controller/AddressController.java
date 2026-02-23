@@ -52,6 +52,14 @@ public class AddressController {
         return ResponseEntity.ok (updatedAddress);
     }
 
+    @PutMapping("/set-default/{id}")
+    public ResponseEntity<Address> setDefaultAddress(
+            @PathVariable String id
+    ) {
+        Address setDefault = addressService.setDefaultAddress(id);
+        return ResponseEntity.ok(setDefault);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteAddress(@PathVariable String id) {
         addressService.deleteById (id);

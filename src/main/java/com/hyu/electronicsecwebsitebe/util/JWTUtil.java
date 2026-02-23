@@ -21,37 +21,34 @@ public class JWTUtil {
     @Value("${spring.jwt.signerKey}")
     private String secretKey;
 
-    public String generateToken(String id, String roleId, String name, String email, String phone) {
-        JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
+    public String generateToken(String id, String roleId) {
+        JWSHeader jwsHeader = new JWSHeader (JWSAlgorithm.HS512);
 
-        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(id)
-                .claim("roleId", roleId)
-                .claim("name", name)
-                .claim("email", email)
-                .claim("phone", phone)
-                .issueTime(new Date())
-                .issuer(ISSUER)
-                .expirationTime(new Date(Instant.now().plus(TOKEN_EXPIRATION_DAYS, ChronoUnit.DAYS).toEpochMilli()))
-                .build();
+        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder ()
+                .subject (id)
+                .claim ("roleId", roleId)
+                .issueTime (new Date ())
+                .issuer (ISSUER)
+                .expirationTime (new Date (Instant.now ().plus (TOKEN_EXPIRATION_DAYS, ChronoUnit.DAYS).toEpochMilli ()))
+                .build ();
 
-        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
-        JWSObject jwsObject = new JWSObject(jwsHeader, payload);
+        Payload payload = new Payload (jwtClaimsSet.toJSONObject ());
+        JWSObject jwsObject = new JWSObject (jwsHeader, payload);
 
         try {
-            jwsObject.sign(new MACSigner(secretKey.getBytes()));
-            return jwsObject.serialize();
+            jwsObject.sign (new MACSigner (secretKey.getBytes ()));
+            return jwsObject.serialize ();
         } catch (JOSEException e) {
-            throw new RuntimeException("Error generating JWT token", e);
+            throw new RuntimeException ("Error generating JWT token", e);
         }
     }
 
     public boolean validateToken(String token) {
         try {
-            SignedJWT signedJWT = SignedJWT.parse(token);
-            JWSVerifier verifier = new MACVerifier(secretKey.getBytes());
+            SignedJWT signedJWT = SignedJWT.parse (token);
+            JWSVerifier verifier = new MACVerifier (secretKey.getBytes ());
 
-            return signedJWT.verify(verifier) && !isTokenExpired(signedJWT);
+            return signedJWT.verify (verifier) && !isTokenExpired (signedJWT);
         } catch (ParseException | JOSEException e) {
             return false;
         }
@@ -59,8 +56,8 @@ public class JWTUtil {
 
     private boolean isTokenExpired(SignedJWT signedJWT) {
         try {
-            Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-            return expirationTime != null && expirationTime.before(new Date());
+            Date expirationTime = signedJWT.getJWTClaimsSet ().getExpirationTime ();
+            return expirationTime != null && expirationTime.before (new Date ());
         } catch (ParseException e) {
             return true;
         }
@@ -68,37 +65,37 @@ public class JWTUtil {
 
     public String getUserIdFromToken(String token) {
         try {
-            SignedJWT signedJWT = SignedJWT.parse(token);
-            return signedJWT.getJWTClaimsSet().getSubject();
+            SignedJWT signedJWT = SignedJWT.parse (token);
+            return signedJWT.getJWTClaimsSet ().getSubject ();
         } catch (ParseException e) {
-            throw new RuntimeException("Error parsing JWT token", e);
+            throw new RuntimeException ("Error parsing JWT token", e);
         }
     }
 
     public String getRoleIdFromToken(String token) {
         try {
-            SignedJWT signedJWT = SignedJWT.parse(token);
-            return (String) signedJWT.getJWTClaimsSet().getClaim("roleId");
+            SignedJWT signedJWT = SignedJWT.parse (token);
+            return (String) signedJWT.getJWTClaimsSet ().getClaim ("roleId");
         } catch (ParseException e) {
-            throw new RuntimeException("Error parsing JWT token", e);
+            throw new RuntimeException ("Error parsing JWT token", e);
         }
     }
 
     public JWTClaimsSet getClaimsFromToken(String token) {
         try {
-            SignedJWT signedJWT = SignedJWT.parse(token);
-            return signedJWT.getJWTClaimsSet();
+            SignedJWT signedJWT = SignedJWT.parse (token);
+            return signedJWT.getJWTClaimsSet ();
         } catch (ParseException e) {
-            throw new RuntimeException("Error parsing JWT token", e);
+            throw new RuntimeException ("Error parsing JWT token", e);
         }
     }
 
     public Date getExpirationDateFromToken(String token) {
         try {
-            SignedJWT signedJWT = SignedJWT.parse(token);
-            return signedJWT.getJWTClaimsSet().getExpirationTime();
+            SignedJWT signedJWT = SignedJWT.parse (token);
+            return signedJWT.getJWTClaimsSet ().getExpirationTime ();
         } catch (ParseException e) {
-            throw new RuntimeException("Error parsing JWT token", e);
+            throw new RuntimeException ("Error parsing JWT token", e);
         }
     }
 }
