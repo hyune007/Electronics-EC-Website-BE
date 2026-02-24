@@ -1,9 +1,10 @@
 package com.hyu.electronicsecwebsitebe.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,7 +39,16 @@ public class Bill {
     @JoinColumn(name = "dc_id")
     private Address address;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "bill")
+    @JsonManagedReference
     private List<DetailBill> detailBills = new ArrayList<> ();
+
+    @Transient
+    private BigDecimal totalAmount;
+
+    public BigDecimal getTotalAmount() {
+        return detailBills.stream()
+                .map(DetailBill::getTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

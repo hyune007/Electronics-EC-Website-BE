@@ -1,5 +1,6 @@
 package com.hyu.electronicsecwebsitebe.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -21,6 +22,7 @@ public class DetailBill {
 
     @ManyToOne
     @JoinColumn(name = "hd_id")
+    @JsonBackReference
     private Bill bill;
 
     @ManyToOne
