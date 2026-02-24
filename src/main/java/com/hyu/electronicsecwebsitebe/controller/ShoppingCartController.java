@@ -18,53 +18,55 @@ public class ShoppingCartController {
 
     @GetMapping("/all")
     public ResponseEntity<List<ShoppingCart>> getAllShoppingCart() {
-        List<ShoppingCart> listShoppingCarts = shoppingCartService.getAllShoppingCarts ();
-        return ResponseEntity.ok (listShoppingCarts);
+        List<ShoppingCart> listShoppingCarts = shoppingCartService.getAllShoppingCarts();
+        return ResponseEntity.ok(listShoppingCarts);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ShoppingCart> getShoppingCartById(@PathVariable String id) {
-        if (!shoppingCartService.existsById (id)) {
-            return ResponseEntity.notFound ().build ();
+        if (!shoppingCartService.existsById(id)) {
+            return ResponseEntity.notFound().build();
         }
-        ShoppingCart foundShoppingCart = shoppingCartService.findById (id);
-        return ResponseEntity.ok (foundShoppingCart);
+        ShoppingCart foundShoppingCart = shoppingCartService.findById(id);
+        return ResponseEntity.ok(foundShoppingCart);
     }
 
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<ShoppingCart>> getShoppingCartByCustomerId(@PathVariable String customerId) {
-        List<ShoppingCart> foundShoppingCart = shoppingCartService.findByCustomerId (customerId);
+        List<ShoppingCart> foundShoppingCart = shoppingCartService.findByCustomerId(customerId);
         if (foundShoppingCart == null) {
-            return ResponseEntity.notFound ().build ();
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok (foundShoppingCart);
+        return ResponseEntity.ok(foundShoppingCart);
     }
 
     @PostMapping("/save")
     public ResponseEntity<ShoppingCart> saveShoppingCart(@RequestBody ShoppingCart shoppingCart) {
-        if (shoppingCartService.existsById (shoppingCart.getId ())) {
-            return ResponseEntity.badRequest ().build ();
+        if (shoppingCart.getId() != null && !shoppingCart.getId().isEmpty()
+                && shoppingCartService.existsById(shoppingCart.getId())) {
+            return ResponseEntity.badRequest().build();
         }
-        ShoppingCart savedShoppingCart = shoppingCartService.saveShoppingCart (shoppingCart);
-        return ResponseEntity.status (HttpStatus.CREATED).body (savedShoppingCart);
+        ShoppingCart savedShoppingCart = shoppingCartService.saveShoppingCart(shoppingCart);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedShoppingCart);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ShoppingCart> updateShoppingCart(@PathVariable String id, @RequestBody ShoppingCart shoppingCart) {
-        if (!shoppingCartService.existsById (id)) {
-            return ResponseEntity.notFound ().build ();
+    public ResponseEntity<ShoppingCart> updateShoppingCart(@PathVariable String id,
+            @RequestBody ShoppingCart shoppingCart) {
+        if (!shoppingCartService.existsById(id)) {
+            return ResponseEntity.notFound().build();
         }
-        shoppingCart.setId (id);
-        ShoppingCart updatedShoppingCart = shoppingCartService.updateShoppingCart (shoppingCart);
-        return ResponseEntity.ok (updatedShoppingCart);
+        shoppingCart.setId(id);
+        ShoppingCart updatedShoppingCart = shoppingCartService.updateShoppingCart(shoppingCart);
+        return ResponseEntity.ok(updatedShoppingCart);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteShoppingCart(@PathVariable String id) {
-        if (!shoppingCartService.existsById (id)) {
-            return ResponseEntity.notFound ().build ();
+        if (!shoppingCartService.existsById(id)) {
+            return ResponseEntity.notFound().build();
         }
-        shoppingCartService.deleteById (id);
-        return ResponseEntity.ok ().build ();
+        shoppingCartService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 }

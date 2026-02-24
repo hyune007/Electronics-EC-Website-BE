@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
@@ -15,36 +16,44 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public List<ShoppingCart> getAllShoppingCarts() {
-        return shoppingCartRepository.findAll ();
+        return shoppingCartRepository.findAll();
     }
 
     @Override
     public ShoppingCart findById(String id) {
-        return shoppingCartRepository.findById (id).orElse (null);
+        return shoppingCartRepository.findById(id).orElse(null);
     }
 
     @Override
     public List<ShoppingCart> findByCustomerId(String customerId) {
-        return shoppingCartRepository.findByCustomerId (customerId);
+        return shoppingCartRepository.findByCustomerId(customerId);
     }
 
     @Override
     public ShoppingCart saveShoppingCart(ShoppingCart shoppingCart) {
-        return shoppingCartRepository.save (shoppingCart);
+        if (shoppingCart.getId() == null || shoppingCart.getId().isEmpty()) {
+            shoppingCart.setId(generateShoppingCartId());
+        }
+        return shoppingCartRepository.save(shoppingCart);
     }
 
     @Override
     public ShoppingCart updateShoppingCart(ShoppingCart shoppingCart) {
-        return shoppingCartRepository.save (shoppingCart);
+        return shoppingCartRepository.save(shoppingCart);
     }
 
     @Override
     public boolean existsById(String id) {
-        return shoppingCartRepository.existsById (id);
+        return shoppingCartRepository.existsById(id);
     }
 
     @Override
     public void deleteById(String id) {
-        shoppingCartRepository.deleteById (id);
+        shoppingCartRepository.deleteById(id);
+    }
+
+    private String generateShoppingCartId() {
+        // tạo mã random
+        return "GH" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
     }
 }
