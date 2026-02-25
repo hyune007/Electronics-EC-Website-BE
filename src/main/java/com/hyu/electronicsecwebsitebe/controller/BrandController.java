@@ -1,5 +1,4 @@
 package com.hyu.electronicsecwebsitebe.controller;
-//huynt
 
 import com.hyu.electronicsecwebsitebe.model.Brand;
 import com.hyu.electronicsecwebsitebe.service.BrandService;
