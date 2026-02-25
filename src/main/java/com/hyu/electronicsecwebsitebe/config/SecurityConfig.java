@@ -47,6 +47,13 @@ public class SecurityConfig {
                         .requestMatchers (HttpMethod.GET, "/api/promotion/**").permitAll ()
                         .requestMatchers (HttpMethod.GET, "/api/review/product/**").permitAll ()
 
+                        .requestMatchers (HttpMethod.POST, "/api/payment/sepay/webhook", "/api/payment/sepay-webhook")
+                        .permitAll ()
+                        .requestMatchers (HttpMethod.POST, "/api/payment/sepay/session")
+                        .hasAnyAuthority (ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
+                        .requestMatchers (HttpMethod.GET, "/api/payment/sepay/status/**")
+                        .hasAnyAuthority (ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
+
                         // CUSTOMER+
                         .requestMatchers (HttpMethod.GET, "/api/shopping-cart/customer/**")
                         .hasAnyAuthority (ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)

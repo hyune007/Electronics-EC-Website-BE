@@ -1,6 +1,7 @@
 CREATE DATABASE IF NOT EXISTS Poly_UBs;
 USE Poly_UBs;
 
+ALTER TABLE hoadon ADD COLUMN order_code BIGINT NULL;
 
 -- 1. Independent Tables
 

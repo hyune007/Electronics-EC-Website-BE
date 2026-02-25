@@ -36,3 +36,12 @@ spring:
             enable: true
           ssl:
             trust: ${MAIL_HOST}
+
+sepay:
+  bank-code: ${SEPAY_BANK_CODE}
+  account-no: ${SEPAY_ACCOUNT_NO}
+  account-name: ${SEPAY_ACCOUNT_NAME}
+  qr:
+    template: ${SEPAY_QR_TEMPLATE:compact}
+  webhook:
+    api-key: ${SEPAY_WEBHOOK_API_KEY:}
