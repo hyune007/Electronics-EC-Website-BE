@@ -42,12 +42,13 @@ public class BillController {
         return ResponseEntity.ok(bill);
     }
 // http://localhost:8080/api/bill/updatate-status/HD44C133?status=Hoàn thành giao dịch (Test url với method PUT)
-    @PutMapping("/update-status/{billId}")
+    @PutMapping("updatate-status/{billId}")
     public ResponseEntity<?> updateBillStatus(
             @PathVariable String billId,
-            @RequestParam String status
+            @RequestParam String status,
+            @RequestParam String employeeId
     ) {
-        Bill updatedBill = billService.updateBillStatus(billId, status);
+        Bill updatedBill = billService.updateBillStatus(billId, status, employeeId );
         return ResponseEntity.ok(updatedBill);
     }
 
