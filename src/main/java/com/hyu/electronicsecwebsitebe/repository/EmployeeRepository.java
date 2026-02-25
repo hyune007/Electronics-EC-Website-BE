@@ -10,6 +10,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, String> {
+    Employee findByEmail(String email);
+
+    @Query("SELECT MAX(e.id) FROM Employee e WHERE e.id LIKE 'NV%'")
+    String findMaxId();
+
     Page<Employee> findByIdContainingIgnoreCaseOrNameContainingIgnoreCase(String id, String name, Pageable pageable);
 
     Page<Employee> findByRoleId(String roleId, Pageable pageable);

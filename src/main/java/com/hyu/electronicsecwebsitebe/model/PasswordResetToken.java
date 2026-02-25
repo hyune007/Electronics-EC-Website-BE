@@ -26,4 +26,8 @@ public class PasswordResetToken {
     @ManyToOne
     @JoinColumn(name = "kh_id", nullable = false)
     private Customer customer;
+
+    public boolean isExpired() {
+        return LocalDateTime.now ().isAfter (expiryDate);
+    }
 }

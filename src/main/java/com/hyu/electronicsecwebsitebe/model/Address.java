@@ -2,13 +2,15 @@ package com.hyu.electronicsecwebsitebe.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.UuidGenerator;
 
 @Data
 @Entity
 @Table(name = "diachi", uniqueConstraints = {@UniqueConstraint(columnNames = {"kh_id", "dc_city", "dc_ward", "dc_detailaddress"})})
 public class Address {
     @Id
-    @Column(name = "dc_id")
+    @UuidGenerator
+    @Column(name = "dc_id", length = 36)
     private String id;
 
     @Column(name = "dc_city")
