@@ -62,7 +62,11 @@ public class BillServiceImpl implements BillService {
         bill.setPaymentMethod(paymentMethod);
 
         // Set trạng thái dựa trên phương thức thanh toán
-        bill.setStatus("Đơn đang chờ giao");
+        if ("Chuyển khoản ngân hàng".equals(paymentMethod)) {
+            bill.setStatus("Đơn chưa thanh toán");
+        } else {
+            bill.setStatus("Đơn đang chờ giao");
+        }
 
         bill.setCustomer(customer);
         bill.setEmployee(employee);
