@@ -25,9 +25,6 @@ public class BillServiceImpl implements BillService {
     @Autowired
     private ProductRepository productRepository;
 
-    @Autowired
-    private EmployeeServiceImpl employeeService;
-
     @Override
     public List<Bill> getAllBills() {
         List<Bill> bills = billRepository.findAll();
@@ -56,6 +53,8 @@ public class BillServiceImpl implements BillService {
             throw new RuntimeException("Giỏ hàng trống, không thể tạo hóa đơn");
         }
 
+        System.out.printf("Cac san pham trong gio hang: " + cartItems.size());
+
         // Tạo hóa đơn mới
         Bill bill = new Bill();
         bill.setId(generateBillId());
@@ -66,9 +65,9 @@ public class BillServiceImpl implements BillService {
 
         // Set trạng thái dựa trên phương thức thanh toán
         if ("Chuyển khoản ngân hàng".equals(paymentMethod)) {
-            bill.setStatus("Chờ xác nhận");
+            bill.setStatus("Đơn chưa thanh toán");
         } else {
-            bill.setStatus("Chưa thanh toán");
+            bill.setStatus("Đơn đang chờ giao");
         }
 
         bill.setCustomer(customer);

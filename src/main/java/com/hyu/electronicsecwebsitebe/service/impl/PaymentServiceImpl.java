@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
     private static final Pattern BILL_ID_PATTERN = Pattern.compile ("HD[0-9A-Z]+", Pattern.CASE_INSENSITIVE);
-    private static final String PAID_STATUS = "Đơn đang chờ";
+    private static final String PAID_STATUS = "Đơn đang chờ giao";
 
     private final BillRepository billRepository;
     private final DetailBillRepository detailBillRepository;

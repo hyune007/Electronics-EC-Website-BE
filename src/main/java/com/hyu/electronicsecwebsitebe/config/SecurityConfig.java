@@ -34,7 +34,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> {})
+                .cors (cors -> {
+                })
                 .csrf (AbstractHttpConfigurer::disable)
                 .sessionManagement (session ->
                         session.sessionCreationPolicy (SessionCreationPolicy.STATELESS))
@@ -52,6 +53,9 @@ public class SecurityConfig {
                         .requestMatchers (HttpMethod.POST, "/api/payment/sepay/session")
                         .hasAnyAuthority (ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
                         .requestMatchers (HttpMethod.GET, "/api/payment/sepay/status/**")
+                        .hasAnyAuthority (ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
+
+                        .requestMatchers (HttpMethod.PUT, "/api/bill/update-status/**")
                         .hasAnyAuthority (ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
 
                         // CUSTOMER+
