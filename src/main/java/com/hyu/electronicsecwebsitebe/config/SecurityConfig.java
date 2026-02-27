@@ -54,6 +54,9 @@ public class SecurityConfig {
                         .requestMatchers (HttpMethod.GET, "/api/payment/sepay/status/**")
                         .hasAnyAuthority (ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
 
+                        .requestMatchers (HttpMethod.PUT, "/api/bill/updatate-status/**")
+                        .hasAnyAuthority (ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
+
                         // CUSTOMER+
                         .requestMatchers (HttpMethod.GET, "/api/shopping-cart/customer/**")
                         .hasAnyAuthority (ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
