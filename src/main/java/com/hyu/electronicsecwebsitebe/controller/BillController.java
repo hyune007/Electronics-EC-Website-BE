@@ -41,7 +41,7 @@ public class BillController {
         List<Bill> bill = billService.findByCustomerId(customerId);
         return ResponseEntity.ok(bill);
     }
-// http://localhost:8080/api/bill/updatate-status/HD44C133?status=Hoàn thành giao dịch (Test url với method PUT)
+// http://localhost:8080/api/bill/update-status/HD44C133?status=Hoàn thành giao dịch (Test url với method PUT)
     @PutMapping("update-status/{billId}")
     public ResponseEntity<?> updateBillStatus(
             @PathVariable String billId,
