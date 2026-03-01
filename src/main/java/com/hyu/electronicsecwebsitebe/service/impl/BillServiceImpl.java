@@ -25,6 +25,9 @@ public class BillServiceImpl implements BillService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private EmployeeServiceImpl employeeService;
+
     @Override
     public List<Bill> getAllBills() {
         List<Bill> bills = billRepository.findAll();
@@ -36,10 +39,12 @@ public class BillServiceImpl implements BillService {
         return  billRepository.findByCustomerId(customerId);
     }
 
-    public Bill updateBillStatus(String billId, String status) {
+    public Bill updateBillStatus(String billId, String status, String employeeId) {
         Bill bill = billRepository.findById(billId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy hóa đơn"));
+        Employee employee = employeeService.findById(employeeId);
         bill.setStatus(status);
+        bill.setEmployee(employee);
         return billRepository.save(bill);
     }
 
@@ -62,7 +67,11 @@ public class BillServiceImpl implements BillService {
         bill.setPaymentMethod(paymentMethod);
 
         // Set trạng thái dựa trên phương thức thanh toán
-        bill.setStatus("Đơn đang chờ giao");
+        if ("Chuyển khoản ngân hàng".equals(paymentMethod)) {
+            bill.setStatus("Đơn chưa thanh toán");
+        } else {
+            bill.setStatus("Đơn đang chờ giao");
+        }
 
         bill.setCustomer(customer);
         bill.setEmployee(employee);
