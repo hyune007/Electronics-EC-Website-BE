@@ -25,6 +25,9 @@ public class BillServiceImpl implements BillService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private EmployeeServiceImpl employeeService;
+
     @Override
     public List<Bill> getAllBills() {
         List<Bill> bills = billRepository.findAll ();

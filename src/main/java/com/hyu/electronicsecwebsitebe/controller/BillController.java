@@ -41,16 +41,15 @@ public class BillController {
         List<Bill> bill = billService.findByCustomerId (customerId);
         return ResponseEntity.ok (bill);
     }
-
-    // http://localhost:8080/api/bill/update-status/HD44C133?status=Hoàn thành giao dịch (Test url với method PUT)
+// http://localhost:8080/api/bill/update-status/HD44C133?status=Hoàn thành giao dịch (Test url với method PUT)
     @PutMapping("update-status/{billId}")
     public ResponseEntity<?> updateBillStatus(
             @PathVariable String billId,
-            @RequestParam String status
-//            @RequestParam String employeeId
+            @RequestParam String status,
+            @RequestParam String employeeId
     ) {
-        Bill updatedBill = billService.updateBillStatus (billId, status);
-        return ResponseEntity.ok (updatedBill);
+        Bill updatedBill = billService.updateBillStatus(billId, status, employeeId );
+        return ResponseEntity.ok(updatedBill);
     }
 
     @PostMapping("/create")
