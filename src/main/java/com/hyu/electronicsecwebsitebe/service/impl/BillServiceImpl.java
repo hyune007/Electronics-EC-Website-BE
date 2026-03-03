@@ -28,6 +28,9 @@ public class BillServiceImpl implements BillService {
     @Autowired
     private EmployeeServiceImpl employeeService;
 
+    @Autowired
+    private GhnLocationServiceImpl ghnLocationService;
+
     @Override
     public List<Bill> getAllBills() {
         List<Bill> bills = billRepository.findAll();
@@ -76,6 +79,8 @@ public class BillServiceImpl implements BillService {
         bill.setCustomer(customer);
         bill.setEmployee(employee);
         bill.setAddress(address);
+        BigDecimal shippingFee = BigDecimal.valueOf(ghnLocationService.calculateShippingFee(address));
+        bill.setShippingFee(shippingFee);
 
         // Lưu hóa đơn
         Bill savedBill = billRepository.save(bill);

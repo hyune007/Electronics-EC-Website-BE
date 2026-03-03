@@ -45,3 +45,7 @@ sepay:
     template: ${SEPAY_QR_TEMPLATE:compact}
   webhook:
     api-key: ${SEPAY_WEBHOOK_API_KEY:}
+
+ghn:
+  token: ${GHN_TOKEN}
+  shop-id: ${SHOP_ID}

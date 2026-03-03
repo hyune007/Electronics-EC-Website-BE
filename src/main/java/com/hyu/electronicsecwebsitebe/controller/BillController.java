@@ -9,10 +9,12 @@ import com.hyu.electronicsecwebsitebe.repository.AddressRepository;
 import com.hyu.electronicsecwebsitebe.repository.CustomerRepository;
 import com.hyu.electronicsecwebsitebe.repository.EmployeeRepository;
 import com.hyu.electronicsecwebsitebe.service.impl.BillServiceImpl;
+import com.hyu.electronicsecwebsitebe.service.impl.GhnLocationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -31,6 +33,9 @@ public class BillController {
     @Autowired
     private AddressRepository addressRepository;
 
+    @Autowired
+    private GhnLocationServiceImpl ghnLocationService;
+
     @GetMapping("/all")
     public ResponseEntity<List<Bill>> getAllBills() {
         return ResponseEntity.ok (billService.getAllBills ());
@@ -40,6 +45,20 @@ public class BillController {
     public ResponseEntity<List<Bill>> billByCustomerId(@PathVariable String customerId) {
         List<Bill> bill = billService.findByCustomerId (customerId);
         return ResponseEntity.ok (bill);
+    }
+
+    @GetMapping("/shipping-fee/{addressId}")
+    public ResponseEntity<BigDecimal> calculateShippingFee(
+            @PathVariable String addressId
+    ) {
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy địa chỉ"));
+
+        BigDecimal fee = BigDecimal.valueOf(
+                ghnLocationService.calculateShippingFee(address)
+        );
+
+        return ResponseEntity.ok(fee);
     }
 // http://localhost:8080/api/bill/update-status/HD44C133?status=Hoàn thành giao dịch (Test url với method PUT)
     @PutMapping("update-status/{billId}")

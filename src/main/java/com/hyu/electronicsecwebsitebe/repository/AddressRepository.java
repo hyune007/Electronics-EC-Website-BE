@@ -8,9 +8,9 @@ import java.util.List;
 
 @Repository
 public interface AddressRepository extends JpaRepository<Address, String> {
-    boolean existsByCustomer_IdAndCityAndWardAndDetailAddress(String customerId, String city, String ward, String detailAddress);
-
     List<Address> findByCustomer_Id(String customerId);
 
     long countByCustomer_Id(String customerId);
+
+    boolean existsByCustomer_IdAndCityAndDistrictAndWardAndDetailAddress(String customerId, String city, String district, String ward, String detailAddress);
 }
