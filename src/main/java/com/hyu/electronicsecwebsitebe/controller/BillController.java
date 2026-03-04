@@ -1,15 +1,13 @@
 package com.hyu.electronicsecwebsitebe.controller;
 
 import com.hyu.electronicsecwebsitebe.dto.request.CreateBillRequest;
-import com.hyu.electronicsecwebsitebe.model.Address;
-import com.hyu.electronicsecwebsitebe.model.Bill;
-import com.hyu.electronicsecwebsitebe.model.Customer;
-import com.hyu.electronicsecwebsitebe.model.Employee;
+import com.hyu.electronicsecwebsitebe.model.*;
 import com.hyu.electronicsecwebsitebe.repository.AddressRepository;
 import com.hyu.electronicsecwebsitebe.repository.CustomerRepository;
 import com.hyu.electronicsecwebsitebe.repository.EmployeeRepository;
 import com.hyu.electronicsecwebsitebe.service.impl.BillServiceImpl;
 import com.hyu.electronicsecwebsitebe.service.impl.GhnLocationServiceImpl;
+import com.hyu.electronicsecwebsitebe.service.impl.ShoppingCartServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +32,9 @@ public class BillController {
     private AddressRepository addressRepository;
 
     @Autowired
+    private ShoppingCartServiceImpl shoppingCartService;
+
+    @Autowired
     private GhnLocationServiceImpl ghnLocationService;
 
     @GetMapping("/all")
@@ -47,15 +48,20 @@ public class BillController {
         return ResponseEntity.ok (bill);
     }
 
-    @GetMapping("/shipping-fee/{addressId}")
+    @GetMapping("/shipping-fee/{customerId}/{addressId}")
     public ResponseEntity<BigDecimal> calculateShippingFee(
+            @PathVariable String customerId,
             @PathVariable String addressId
     ) {
+        List<ShoppingCart> cartItems = shoppingCartService.findByCustomerId(customerId);
         Address address = addressRepository.findById(addressId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy địa chỉ"));
-
+        BigDecimal totalBigDecimal = cartItems.stream()
+                .map(item -> item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        int totalAmount = totalBigDecimal.intValue();
         BigDecimal fee = BigDecimal.valueOf(
-                ghnLocationService.calculateShippingFee(address)
+                ghnLocationService.calculateShippingFee(address, totalAmount)
         );
 
         return ResponseEntity.ok(fee);

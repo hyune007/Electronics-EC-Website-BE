@@ -7,5 +7,5 @@ public interface GhnLocationService {
 
     String getWardCode(Integer districtId, String ward);
 
-    int calculateShippingFee(Address address);
+    int calculateShippingFee(Address address, int totalAmount);
 }

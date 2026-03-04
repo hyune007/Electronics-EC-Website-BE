@@ -52,7 +52,7 @@ public class GhnLocationServiceImpl implements GhnLocationService {
                 .filter(d -> normalize(district).equalsIgnoreCase(normalize(d.get("DistrictName").toString())))
                 .map(d -> (Integer) d.get("DistrictID"))
                 .findFirst()
-                .orElse(null); // ví dụ
+                .orElse(null);
     }
 
     @Override
@@ -70,11 +70,11 @@ public class GhnLocationServiceImpl implements GhnLocationService {
                 .filter(w -> normalize(ward).equalsIgnoreCase(normalize(w.get("WardName").toString())))
                 .map(w -> w.get("WardCode").toString())
                 .findFirst()
-                .orElse(null); // ví dụ
+                .orElse(null);
     }
 
     @Override
-    public int calculateShippingFee(Address address) {
+    public int calculateShippingFee(Address address, int totalAmount) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -83,14 +83,14 @@ public class GhnLocationServiceImpl implements GhnLocationService {
 
         Map<String, Object> body = new HashMap<>();
         body.put("service_type_id", 2);
-        body.put("from_district_id", 1454);
         body.put("to_district_id", address.getGhnDistrictId());
         body.put("to_ward_code", address.getGhnWardCode());
         body.put("weight", 500);
         body.put("length", 20);
         body.put("width", 20);
         body.put("height", 10);
-        body.put("insurance_value", 50000);
+        int insuranceValue = Math.min(totalAmount, 20000000);
+        body.put("insurance_value", insuranceValue);
 
         HttpEntity<Map<String, Object>> request =
                 new HttpEntity<>(body, headers);

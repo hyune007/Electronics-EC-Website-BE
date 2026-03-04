@@ -58,7 +58,10 @@ public class BillServiceImpl implements BillService {
         if (cartItems == null || cartItems.isEmpty()) {
             throw new RuntimeException("Giỏ hàng trống, không thể tạo hóa đơn");
         }
-
+        BigDecimal totalBigDecimal = cartItems.stream()
+                .map(item -> item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        int totalAmount = totalBigDecimal.intValue();
         System.out.printf("Cac san pham trong gio hang: " + cartItems.size());
 
         // Tạo hóa đơn mới
@@ -79,7 +82,7 @@ public class BillServiceImpl implements BillService {
         bill.setCustomer(customer);
         bill.setEmployee(employee);
         bill.setAddress(address);
-        BigDecimal shippingFee = BigDecimal.valueOf(ghnLocationService.calculateShippingFee(address));
+        BigDecimal shippingFee = BigDecimal.valueOf(ghnLocationService.calculateShippingFee(address, totalAmount));
         bill.setShippingFee(shippingFee);
 
         // Lưu hóa đơn
