@@ -515,16 +515,16 @@ VALUES ('SP181', 'Anker 737 Power Bank', 1599, 'Sạc dự phòng 140W', 'SP181.
        ('SP199', 'G.Skill Trident Z5 RGB 32GB', 1699, 'RAM DDR5 bus cao', 'SP199.jpg', 'LSP10', 75, 'H80'),
        ('SP200', 'Seagate BarraCuda 4TB', 1199, 'Ổ cứng HDD lưu trữ', 'SP200.jpg', 'LSP10', 130, 'H81');
 
--- khachhang (5 customers)
+-- khachhang (5 customers) - password: password123 (BCrypt hash)
 INSERT INTO khachhang (kh_id, kh_name, kh_password, kh_phone, kh_mail, kh_role)
-VALUES ('KH001', 'Nguyễn Văn A', 'password123', '0912345678', 'nguyenvana@email.com', 'ROLE_CUSTOMER'),
-       ('KH002', 'Trần Thị B', 'password123', '0987654321', 'tranthib@email.com', 'ROLE_CUSTOMER'),
-       ('KH003', 'Lê Văn C', 'password123', '0905123456', 'levanc@email.com', 'ROLE_CUSTOMER'),
-       ('KH004', 'Phạm Thị D', 'password123', '0333444555', 'phamthid@email.com', 'ROLE_CUSTOMER'),
-       ('KH005', 'Hoàng Văn E', 'password123', '0777888999', 'hoangvane@email.com', 'ROLE_CUSTOMER');
+VALUES ('KH001', 'Nguyễn Văn A', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '0912345678', 'nguyenvana@email.com', 'ROLE_CUSTOMER'),
+       ('KH002', 'Trần Thị B', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '0987654321', 'tranthib@email.com', 'ROLE_CUSTOMER'),
+       ('KH003', 'Lê Văn C', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '0905123456', 'levanc@email.com', 'ROLE_CUSTOMER'),
+       ('KH004', 'Phạm Thị D', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '0333444555', 'phamthid@email.com', 'ROLE_CUSTOMER'),
+       ('KH005', 'Hoàng Văn E', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '0777888999', 'hoangvane@email.com', 'ROLE_CUSTOMER');
 
--- nhanvien (1 employee)
+-- nhanvien (1 employee) - password: adminpass (BCrypt hash)
 INSERT INTO nhanvien (nv_id, nv_name, nv_password, nv_phone, nv_mail, nv_address, nv_role, nv_birth)
-VALUES ('NV001', 'Admin', 'adminpass', '0123456789', 'admin@polyubs.com', '123 FPT Polytechnic', 'ROLE_ADMIN',
+VALUES ('NV001', 'Admin', '$2a$10$dXJ3SW6G7P50lGmMQgel2uSR1r0ICbMkvNJrHLbYCfLGqHaAcM1Hi', '0123456789', 'admin@polyubs.com', '123 FPT Polytechnic', 'ROLE_ADMIN',
         '1990-01-01');
 

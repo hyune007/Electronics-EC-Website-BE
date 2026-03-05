@@ -23,6 +23,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+
   mail:
     host: ${MAIL_HOST}
     port: ${MAIL_PORT}
@@ -49,3 +50,7 @@ sepay:
 ghn:
   token: ${GHN_TOKEN}
   shop-id: ${SHOP_ID}
+
+google:
+  client-id: ${GOOGLE_CLIENT_ID}
+
