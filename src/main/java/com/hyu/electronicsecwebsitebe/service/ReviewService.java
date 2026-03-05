@@ -9,9 +9,9 @@ public interface ReviewService {
 
     Review findById(String id);
 
-    Review findByProductId(String productId);
+    List<Review> findAllByProductId(String productId);
 
-    Review findByCustomerId(String customerId);
+    List<Review> findAllByCustomerId(String customerId);
 
     Review findByCustomerIdAndProductId(String customerId, String productId);
 

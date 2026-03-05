@@ -17,6 +17,9 @@ public class AddressServiceImpl implements AddressService {
     @Autowired
     private AddressRepository addressRepository;
 
+    @Autowired
+    private GhnLocationServiceImpl ghnLocationService;
+
     @Override
     public List<Address> getAll() {
         return addressRepository.findAll();
@@ -46,9 +49,10 @@ public class AddressServiceImpl implements AddressService {
         }
 
         boolean exists = addressRepository
-                .existsByCustomer_IdAndCityAndWardAndDetailAddress(
+                .existsByCustomer_IdAndCityAndDistrictAndWardAndDetailAddress(
                         customerId,
                         address.getCity(),
+                        address.getDistrict(),
                         address.getWard(),
                         address.getDetailAddress()
                 );
@@ -57,6 +61,24 @@ public class AddressServiceImpl implements AddressService {
             throw new IllegalArgumentException("Địa chỉ đã tồn tại");
         }
 
+        Integer districtId = ghnLocationService.getDistrictId(
+                address.getCity(),
+                address.getDistrict()
+        );
+
+        String wardCode = ghnLocationService.getWardCode(
+                districtId,
+                address.getWard()
+        );
+
+        if (districtId == null || wardCode == null) {
+            throw new IllegalArgumentException(
+                    "Địa chỉ chưa được hỗ trợ giao hàng"
+            );
+        }
+
+        address.setGhnDistrictId(districtId);
+        address.setGhnWardCode(wardCode);
         return addressRepository.save(address);
     }
 
