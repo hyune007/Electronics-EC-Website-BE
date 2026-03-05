@@ -147,7 +147,7 @@ public class AuthServiceImpl implements AuthService {
             customer = new Customer ();
             customer.setName (name != null ? name : email.split ("@")[0]);
             customer.setEmail (email);
-            // Tạo mật khẩu ngẫu nhiên cho tài khoản Google (người dùng không cần biết)
+            // Tạo mật khẩu ngẫu nhiên cho tài khoản Google
             customer.setPassword (UUID.randomUUID ().toString ());
             customer.setRole (customerRole);
 
