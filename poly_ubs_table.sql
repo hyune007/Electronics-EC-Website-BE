@@ -36,7 +36,7 @@ create table khachhang
 (
     kh_id       VARCHAR(8)   NOT NULL,
     kh_name     VARCHAR(100) NOT NULL,
-    kh_password VARCHAR(40)  NOT NULL,
+    kh_password VARCHAR(255) NOT NULL,
     kh_phone    VARCHAR(15)  NOT NULL,
     kh_mail     VARCHAR(50)  NOT NULL,
     kh_role     varchar(20)  NOT NULL,
@@ -48,7 +48,7 @@ create table nhanvien
 (
     nv_id       VARCHAR(8)   NOT NULL,
     nv_name     VARCHAR(100) NOT NULL,
-    nv_password VARCHAR(40)  NOT NULL,
+    nv_password VARCHAR(255) NOT NULL,
     nv_phone    VARCHAR(15)  NOT NULL,
     nv_mail     VARCHAR(50)  NOT NULL,
     nv_address  VARCHAR(100) NOT NULL,
@@ -75,11 +75,11 @@ create table sanpham
     sp_id          VARCHAR(8)     NOT NULL,
     sp_name        VARCHAR(100)   NOT NULL,
     sp_price       DECIMAL(18, 0) NOT NULL,
-    sp_description VARCHAR(100)   NOT NULL,
-    sp_image       VARCHAR(100)   NOT NULL,
+    sp_description VARCHAR(1000)  NOT NULL,
+    sp_image       VARCHAR(500)   NOT NULL,
     sp_category_id VARCHAR(20)    NOT NULL,
     sp_stock       INT            NOT NULL,
-    sp_brand_id    VARCHAR(50)    NOT NULL,
+    sp_brand_id    VARCHAR(10)    NOT NULL,
     PRIMARY KEY (sp_id),
     FOREIGN KEY (sp_brand_id) REFERENCES hang (hang_id),
     FOREIGN KEY (sp_category_id) REFERENCES loaisanpham (lsp_id)

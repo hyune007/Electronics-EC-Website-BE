@@ -27,6 +27,9 @@ public class Bill {
     @Column(name = "payment_method")
     private String paymentMethod;
 
+    @Column(name = "shipping_fee")
+    private BigDecimal shippingFee;
+
     @ManyToOne
     @JoinColumn(name = "kh_id")
     private Customer customer;
@@ -49,6 +52,6 @@ public class Bill {
     public BigDecimal getTotalAmount() {
         return detailBills.stream()
                 .map(DetailBill::getTotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(shippingFee, BigDecimal::add);
     }
 }

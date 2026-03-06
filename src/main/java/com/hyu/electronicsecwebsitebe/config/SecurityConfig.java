@@ -14,6 +14,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -34,7 +39,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> {})
+                .cors (cors -> {
+                })
                 .csrf (AbstractHttpConfigurer::disable)
                 .sessionManagement (session ->
                         session.sessionCreationPolicy (SessionCreationPolicy.STATELESS))
@@ -46,12 +52,20 @@ public class SecurityConfig {
                         .requestMatchers (HttpMethod.GET, "/api/product-category/**").permitAll ()
                         .requestMatchers (HttpMethod.GET, "/api/promotion/**").permitAll ()
                         .requestMatchers (HttpMethod.GET, "/api/review/product/**").permitAll ()
+                        .requestMatchers ("/api/bill/shipping-fee/**").permitAll ()
 
                         .requestMatchers (HttpMethod.POST, "/api/payment/sepay/webhook", "/api/payment/sepay-webhook")
                         .permitAll ()
                         .requestMatchers (HttpMethod.POST, "/api/payment/sepay/session")
                         .hasAnyAuthority (ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
                         .requestMatchers (HttpMethod.GET, "/api/payment/sepay/status/**")
+                        .hasAnyAuthority (ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
+
+                        .requestMatchers (HttpMethod.POST, "/api/bill/create")
+                        .hasAnyAuthority (ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
+                        .requestMatchers (HttpMethod.GET, "/api/bill/customer/**")
+                        .hasAnyAuthority (ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
+                        .requestMatchers (HttpMethod.PUT, "/api/bill/update-status/**")
                         .hasAnyAuthority (ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
 
                         // CUSTOMER+
@@ -148,5 +162,22 @@ public class SecurityConfig {
                 .addFilterBefore (jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build ();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration ();
+        config.setAllowedOrigins (List.of (
+                "https://ec-website-fe-312564370609.asia-southeast1.run.app",
+                "https://ubraintech.store",
+                "http://localhost:8080"
+        ));
+        config.setAllowedMethods (List.of ("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders (List.of ("*"));
+        config.setAllowCredentials (true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource ();
+        source.registerCorsConfiguration ("/api/**", config);
+        return source;
     }
 }

@@ -15,6 +15,9 @@ public interface AuthService {
 
     Customer register(RegisterRequest registerRequest);
 
+    // Google OAuth
+    LoginResponse loginWithGoogle(String idToken);
+
     // Employee
     LoginResponse loginEmployee(String email, String password);
 

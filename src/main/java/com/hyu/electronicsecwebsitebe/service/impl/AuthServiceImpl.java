@@ -15,8 +15,14 @@ import com.hyu.electronicsecwebsitebe.service.CustomerService;
 import com.hyu.electronicsecwebsitebe.service.EmployeeService;
 import com.hyu.electronicsecwebsitebe.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
+
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -40,6 +46,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Value("${google.client-id}")
+    private String googleClientId;
 
     // CUSTOMER
 
@@ -93,6 +102,64 @@ public class AuthServiceImpl implements AuthService {
         customer.setRole (customerRole);
 
         return customerService.saveCustomer (customer);
+    }
+
+    // GOOGLE OAUTH
+
+    @Override
+    public LoginResponse loginWithGoogle(String idToken) {
+        // Xác minh Google ID Token bằng Google tokeninfo endpoint
+        Map<String, Object> googleUser;
+        try {
+            RestClient restClient = RestClient.create ();
+            googleUser = restClient.get ()
+                    .uri ("https://oauth2.googleapis.com/tokeninfo?id_token=" + idToken)
+                    .retrieve ()
+                    .body (new ParameterizedTypeReference<> () {
+                    });
+        } catch (Exception e) {
+            throw new RuntimeException ("Google ID Token không hợp lệ");
+        }
+
+        if (googleUser == null || googleUser.containsKey ("error")) {
+            throw new RuntimeException ("Google ID Token không hợp lệ");
+        }
+
+        // Kiểm tra audience (client_id) có khớp không
+        String aud = (String) googleUser.get ("aud");
+        if (!googleClientId.equals (aud)) {
+            throw new RuntimeException ("Google ID Token không dành cho ứng dụng này");
+        }
+
+        String email = (String) googleUser.get ("email");
+        String name = (String) googleUser.get ("name");
+
+        if (email == null || email.isEmpty ()) {
+            throw new RuntimeException ("Không lấy được email từ Google");
+        }
+
+        // Tìm customer theo email, nếu chưa có thì tạo mới
+        Customer customer = customerRepository.findByEmail (email);
+        if (customer == null) {
+            Role customerRole = roleRepository.findById ("ROLE_CUSTOMER")
+                    .orElseThrow (() -> new RuntimeException ("Role ROLE_CUSTOMER không tồn tại trong hệ thống"));
+
+            customer = new Customer ();
+            customer.setName (name != null ? name : email.split ("@")[0]);
+            customer.setEmail (email);
+            // Tạo mật khẩu ngẫu nhiên cho tài khoản Google
+            customer.setPassword (UUID.randomUUID ().toString ());
+            customer.setRole (customerRole);
+
+            customer = customerService.saveCustomer (customer);
+        }
+
+        // Tạo JWT token
+        String token = jwtUtil.generateToken (customer.getId (), customer.getRole ().getId ());
+
+        return LoginResponse.builder ()
+                .token (token)
+                .build ();
     }
 
     // EMPLOYEE

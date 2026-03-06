@@ -1,18 +1,18 @@
 package com.hyu.electronicsecwebsitebe.controller;
 
 import com.hyu.electronicsecwebsitebe.dto.request.CreateBillRequest;
-import com.hyu.electronicsecwebsitebe.model.Address;
-import com.hyu.electronicsecwebsitebe.model.Bill;
-import com.hyu.electronicsecwebsitebe.model.Customer;
-import com.hyu.electronicsecwebsitebe.model.Employee;
+import com.hyu.electronicsecwebsitebe.model.*;
 import com.hyu.electronicsecwebsitebe.repository.AddressRepository;
 import com.hyu.electronicsecwebsitebe.repository.CustomerRepository;
 import com.hyu.electronicsecwebsitebe.repository.EmployeeRepository;
 import com.hyu.electronicsecwebsitebe.service.impl.BillServiceImpl;
+import com.hyu.electronicsecwebsitebe.service.impl.GhnLocationServiceImpl;
+import com.hyu.electronicsecwebsitebe.service.impl.ShoppingCartServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -31,23 +31,49 @@ public class BillController {
     @Autowired
     private AddressRepository addressRepository;
 
+    @Autowired
+    private ShoppingCartServiceImpl shoppingCartService;
+
+    @Autowired
+    private GhnLocationServiceImpl ghnLocationService;
+
     @GetMapping("/all")
     public ResponseEntity<List<Bill>> getAllBills() {
-        return ResponseEntity.ok(billService.getAllBills());
+        return ResponseEntity.ok (billService.getAllBills ());
     }
 
     @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<Bill>> billByCustomerId (@PathVariable String customerId) {
-        List<Bill> bill = billService.findByCustomerId(customerId);
-        return ResponseEntity.ok(bill);
+    public ResponseEntity<List<Bill>> billByCustomerId(@PathVariable String customerId) {
+        List<Bill> bill = billService.findByCustomerId (customerId);
+        return ResponseEntity.ok (bill);
     }
-// http://localhost:8080/api/bill/updatate-status/HD44C133?status=Hoàn thành giao dịch (Test url với method PUT)
-    @PutMapping("/update-status/{billId}")
+
+    @GetMapping("/shipping-fee/{customerId}/{addressId}")
+    public ResponseEntity<BigDecimal> calculateShippingFee(
+            @PathVariable String customerId,
+            @PathVariable String addressId
+    ) {
+        List<ShoppingCart> cartItems = shoppingCartService.findByCustomerId(customerId);
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy địa chỉ"));
+        BigDecimal totalBigDecimal = cartItems.stream()
+                .map(item -> item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        int totalAmount = totalBigDecimal.intValue();
+        BigDecimal fee = BigDecimal.valueOf(
+                ghnLocationService.calculateShippingFee(address, totalAmount)
+        );
+
+        return ResponseEntity.ok(fee);
+    }
+// http://localhost:8080/api/bill/update-status/HD44C133?status=Hoàn thành giao dịch (Test url với method PUT)
+    @PutMapping("update-status/{billId}")
     public ResponseEntity<?> updateBillStatus(
             @PathVariable String billId,
-            @RequestParam String status
+            @RequestParam String status,
+            @RequestParam(required = false) String employeeId
     ) {
-        Bill updatedBill = billService.updateBillStatus(billId, status);
+        Bill updatedBill = billService.updateBillStatus(billId, status, employeeId);
         return ResponseEntity.ok(updatedBill);
     }
 
@@ -58,20 +84,20 @@ public class BillController {
             @RequestParam String addressId,
             @RequestParam String paymentMethod
     ) {
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
+        Customer customer = customerRepository.findById (customerId)
+                .orElseThrow (() -> new RuntimeException ("Không tìm thấy khách hàng"));
 
         Employee employee = null;
         if (employeeId != null) {
-            employee = employeeRepository.findById(employeeId).orElse(null);
+            employee = employeeRepository.findById (employeeId).orElse (null);
         }
 
-        Address address = addressRepository.findById(addressId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy địa chỉ"));
+        Address address = addressRepository.findById (addressId)
+                .orElseThrow (() -> new RuntimeException ("Không tìm thấy địa chỉ"));
 
-        Bill bill = billService.createbillfromcart(customer, employee, address, paymentMethod);
+        Bill bill = billService.createbillfromcart (customer, employee, address, paymentMethod);
 
-        return ResponseEntity.ok(bill);
+        return ResponseEntity.ok (bill);
     }
 }
 /*

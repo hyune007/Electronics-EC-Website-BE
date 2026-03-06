@@ -1,6 +1,7 @@
 package com.hyu.electronicsecwebsitebe.controller;
 
 import com.hyu.electronicsecwebsitebe.dto.request.auth.ForgotPasswordRequest;
+import com.hyu.electronicsecwebsitebe.dto.request.auth.GoogleLoginRequest;
 import com.hyu.electronicsecwebsitebe.dto.request.auth.LoginRequest;
 import com.hyu.electronicsecwebsitebe.dto.request.auth.RegisterEmployeeRequest;
 import com.hyu.electronicsecwebsitebe.dto.request.auth.RegisterRequest;
@@ -43,6 +44,18 @@ public class AuthController {
             return ResponseEntity.status (HttpStatus.CREATED).body ("Đăng ký thành công");
         } else {
             return ResponseEntity.status (HttpStatus.BAD_REQUEST).body ("Email đã tồn tại trong hệ thống");
+        }
+    }
+
+    // GOOGLE OAUTH
+
+    @PostMapping("/google")
+    public ResponseEntity<?> loginWithGoogle(@Valid @RequestBody GoogleLoginRequest googleLoginRequest) {
+        try {
+            LoginResponse loginResponse = authService.loginWithGoogle (googleLoginRequest.getIdToken ());
+            return ResponseEntity.ok (loginResponse);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status (HttpStatus.UNAUTHORIZED).body (e.getMessage ());
         }
     }
 

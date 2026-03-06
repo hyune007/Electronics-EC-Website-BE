@@ -16,8 +16,17 @@ public class Address {
     @Column(name = "dc_city")
     private String city;
 
+    @Column(name = "dc_district")
+    private String district;
+
+    @Column(name = "ghn_district_id")
+    private Integer ghnDistrictId;
+
     @Column(name = "dc_ward")
     private String ward;
+
+    @Column(name = "ghn_ward_code")
+    private String ghnWardCode;
 
     @Column(name = "dc_detailaddress")
     private String detailAddress;

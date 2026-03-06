@@ -21,10 +21,10 @@ public class PaymentController {
 
     @PostMapping("/sepay/session")
     public ResponseEntity<SePaySessionResponse> createSession(@RequestBody CreateSePaySessionRequest request) {
-        if (request == null || request.getBillId() == null || request.getBillId().isBlank()) {
-            return ResponseEntity.badRequest().build();
+        if (request == null || request.getBillId () == null || request.getBillId ().isBlank ()) {
+            return ResponseEntity.badRequest ().build ();
         }
-        return ResponseEntity.ok(paymentService.createPaymentSession(request.getBillId()));
+        return ResponseEntity.ok (paymentService.createPaymentSession (request.getBillId ()));
     }
 
     @PostMapping({"/sepay/webhook", "/sepay-webhook"})
@@ -32,18 +32,18 @@ public class PaymentController {
             @RequestBody SePayWebhookPayload payload,
             @RequestHeader(value = "Authorization", required = false) String authorization
     ) {
-        SePayWebhookResponse response = paymentService.handlePaymentWebhook(payload, authorization);
-        if (!response.isSuccess()) {
-            HttpStatus status = "Unauthorized".equalsIgnoreCase(response.getMessage())
+        SePayWebhookResponse response = paymentService.handlePaymentWebhook (payload, authorization);
+        if (!response.isSuccess ()) {
+            HttpStatus status = "Unauthorized".equalsIgnoreCase (response.getMessage ())
                     ? HttpStatus.UNAUTHORIZED
                     : HttpStatus.BAD_REQUEST;
-            return ResponseEntity.status(status).body(response);
+            return ResponseEntity.status (status).body (response);
         }
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok (response);
     }
 
     @GetMapping("/sepay/status/{billId}")
     public ResponseEntity<PaymentStatusResponse> status(@PathVariable String billId) {
-        return ResponseEntity.ok(paymentService.getPaymentStatus(billId));
+        return ResponseEntity.ok (paymentService.getPaymentStatus (billId));
     }
 }

@@ -25,6 +25,12 @@ public class BillServiceImpl implements BillService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private EmployeeServiceImpl employeeService;
+
+    @Autowired
+    private GhnLocationServiceImpl ghnLocationService;
+
     @Override
     public List<Bill> getAllBills() {
         List<Bill> bills = billRepository.findAll();
@@ -36,9 +42,13 @@ public class BillServiceImpl implements BillService {
         return  billRepository.findByCustomerId(customerId);
     }
 
-    public Bill updateBillStatus(String billId, String status) {
+    public Bill updateBillStatus(String billId, String status, String employeeId) {
         Bill bill = billRepository.findById(billId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy hóa đơn"));
+        if (employeeId != null) {
+            Employee employee = employeeService.findById(employeeId);
+            bill.setEmployee(employee);
+        }
         bill.setStatus(status);
         return billRepository.save(bill);
     }
@@ -50,7 +60,10 @@ public class BillServiceImpl implements BillService {
         if (cartItems == null || cartItems.isEmpty()) {
             throw new RuntimeException("Giỏ hàng trống, không thể tạo hóa đơn");
         }
-
+        BigDecimal totalBigDecimal = cartItems.stream()
+                .map(item -> item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        int totalAmount = totalBigDecimal.intValue();
         System.out.printf("Cac san pham trong gio hang: " + cartItems.size());
 
         // Tạo hóa đơn mới
@@ -62,11 +75,17 @@ public class BillServiceImpl implements BillService {
         bill.setPaymentMethod(paymentMethod);
 
         // Set trạng thái dựa trên phương thức thanh toán
-        bill.setStatus("Đơn đang chờ giao");
+        if ("Chuyển khoản ngân hàng".equals(paymentMethod)) {
+            bill.setStatus("Đơn chưa thanh toán");
+        } else {
+            bill.setStatus("Đơn đang chờ giao");
+        }
 
         bill.setCustomer(customer);
         bill.setEmployee(employee);
         bill.setAddress(address);
+        BigDecimal shippingFee = BigDecimal.valueOf(ghnLocationService.calculateShippingFee(address, totalAmount));
+        bill.setShippingFee(shippingFee);
 
         // Lưu hóa đơn
         Bill savedBill = billRepository.save(bill);
