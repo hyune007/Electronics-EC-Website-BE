@@ -39,8 +39,8 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         passwordResetToken.setCustomer (customer);
         passwordResetToken.setExpiryDate (java.time.LocalDateTime.now ().plusMinutes (5));
         passwordResetTokenRepository.save (passwordResetToken);
-        String resetLink = "http://localhost:5173/change-password?token=" + token;
-
+//        String resetLink = "http://localhost:5173/change-password?token=" + token;
+        String resetLink = "https://ec-website-fe-312564370609.asia-southeast1.run.app/change-password?token=" + token;
         String emailBody = """
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
                     <h2 style="color: #333; text-align: center;">🔐 Đặt lại mật khẩu</h2>

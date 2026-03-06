@@ -71,9 +71,9 @@ public class BillController {
     public ResponseEntity<?> updateBillStatus(
             @PathVariable String billId,
             @RequestParam String status,
-            @RequestParam String employeeId
+            @RequestParam(required = false) String employeeId
     ) {
-        Bill updatedBill = billService.updateBillStatus(billId, status, employeeId );
+        Bill updatedBill = billService.updateBillStatus(billId, status, employeeId);
         return ResponseEntity.ok(updatedBill);
     }
 

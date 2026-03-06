@@ -45,9 +45,11 @@ public class BillServiceImpl implements BillService {
     public Bill updateBillStatus(String billId, String status, String employeeId) {
         Bill bill = billRepository.findById(billId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy hóa đơn"));
-        Employee employee = employeeService.findById(employeeId);
+        if (employeeId != null) {
+            Employee employee = employeeService.findById(employeeId);
+            bill.setEmployee(employee);
+        }
         bill.setStatus(status);
-        bill.setEmployee(employee);
         return billRepository.save(bill);
     }
 
