@@ -51,7 +51,37 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee updateEmployee(Employee employee) {
-        return employeeRepository.save (employee);
+        Employee existing = employeeRepository.findById (employee.getId ())
+                .orElseThrow (() -> new RuntimeException ("Employee not found"));
+        if (employee.getName () != null && !employee.getName ().isEmpty ()) {
+            existing.setName (employee.getName ());
+        }
+        if (employee.getEmail () != null && !employee.getEmail ().isEmpty ()) {
+            existing.setEmail (employee.getEmail ());
+        }
+        if (employee.getPhone () != null && !employee.getPhone ().isEmpty ()) {
+            existing.setPhone (employee.getPhone ());
+        }
+        if (employee.getAddress () != null && !employee.getAddress ().isEmpty ()) {
+            existing.setAddress (employee.getAddress ());
+        }
+        if (employee.getBirthday () != null) {
+            existing.setBirthday (employee.getBirthday ());
+        }
+        if (employee.getPassword () != null && !employee.getPassword ().isEmpty ()) {
+            if (!employee.getPassword ().startsWith ("$2a$")
+                    && !employee.getPassword ().startsWith ("$2b$")
+                    && !employee.getPassword ().startsWith ("$2y$")) {
+                String hashedPassword = passwordEncoder.encode (employee.getPassword ());
+                existing.setPassword (hashedPassword);
+            } else {
+                existing.setPassword (employee.getPassword ());
+            }
+        }
+        if (employee.getRole () != null) {
+            existing.setRole (employee.getRole ());
+        }
+        return employeeRepository.save (existing);
     }
 
     @Override
