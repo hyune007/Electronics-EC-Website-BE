@@ -172,7 +172,6 @@ public class SecurityConfig {
                 "https://ubraintech.store",
                 "http://localhost:8080",
                 "http://localhost:5173"
-                
         ));
         config.setAllowedMethods (List.of ("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders (List.of ("*"));
