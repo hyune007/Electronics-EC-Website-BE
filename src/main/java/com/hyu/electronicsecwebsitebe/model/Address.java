@@ -16,6 +16,9 @@ public class Address {
     @Column(name = "dc_city")
     private String city;
 
+    @Column(name = "ghn_city_id")
+    private Integer ghnCityId;
+
     @Column(name = "dc_district")
     private String district;
 

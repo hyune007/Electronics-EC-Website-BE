@@ -78,7 +78,7 @@ public class BillServiceImpl implements BillService {
         if ("Chuyển khoản ngân hàng".equals(paymentMethod)) {
             bill.setStatus("Đơn chưa thanh toán");
         } else {
-            bill.setStatus("Đơn đang chờ giao");
+            bill.setStatus("Chờ xác nhận");
         }
 
         bill.setCustomer(customer);
@@ -96,9 +96,10 @@ public class BillServiceImpl implements BillService {
             detailBill.setId(generateDetailBillId());
             detailBill.setBill(savedBill);
             detailBill.setProduct(cartItem.getProduct());
+            detailBill.setPrice(cartItem.getProduct().getDiscountedPrice());
             detailBill.setQuantity(cartItem.getQuantity());
             detailBill.setTotal(
-                    cartItem.getProduct().getPrice()
+                    cartItem.getProduct().getDiscountedPrice()
                             .multiply(BigDecimal.valueOf(cartItem.getQuantity()))
             );
 

@@ -39,7 +39,21 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCart updateShoppingCart(ShoppingCart shoppingCart) {
-        return shoppingCartRepository.save(shoppingCart);
+
+        ShoppingCart existingCart = shoppingCartRepository
+                .findById(shoppingCart.getId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy giỏ hàng"));
+
+        int stock = existingCart.getProduct().getStock();
+        int quantity = shoppingCart.getQuantity();
+
+        if (quantity > stock) {
+            throw new RuntimeException("Số lượng sản phẩm trong giỏ vượt quá số lượng tồn kho");
+        }
+
+        existingCart.setQuantity(quantity);
+
+        return shoppingCartRepository.save(existingCart);
     }
 
     @Override
