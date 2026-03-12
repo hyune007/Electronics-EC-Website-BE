@@ -96,9 +96,10 @@ public class BillServiceImpl implements BillService {
             detailBill.setId(generateDetailBillId());
             detailBill.setBill(savedBill);
             detailBill.setProduct(cartItem.getProduct());
+            detailBill.setPrice(cartItem.getProduct().getDiscountedPrice());
             detailBill.setQuantity(cartItem.getQuantity());
             detailBill.setTotal(
-                    cartItem.getProduct().getPrice()
+                    cartItem.getProduct().getDiscountedPrice()
                             .multiply(BigDecimal.valueOf(cartItem.getQuantity()))
             );
 

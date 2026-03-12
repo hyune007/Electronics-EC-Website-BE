@@ -51,14 +51,19 @@ public class ShoppingCartController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ShoppingCart> updateShoppingCart(@PathVariable String id,
+    public ResponseEntity<?> updateShoppingCart(@PathVariable String id,
             @RequestBody ShoppingCart shoppingCart) {
         if (!shoppingCartService.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        shoppingCart.setId(id);
-        ShoppingCart updatedShoppingCart = shoppingCartService.updateShoppingCart(shoppingCart);
-        return ResponseEntity.ok(updatedShoppingCart);
+        try {
+            shoppingCart.setId(id);
+            ShoppingCart updatedShoppingCart = shoppingCartService.updateShoppingCart(shoppingCart);
+            return ResponseEntity.ok(updatedShoppingCart);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/delete/{id}")
