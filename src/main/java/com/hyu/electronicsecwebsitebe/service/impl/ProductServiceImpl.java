@@ -23,8 +23,7 @@ public class ProductServiceImpl implements ProductService {
         Specification<Product> spec = Specification
                 .where(ProductSpecification.hasCategory(categoryId))
                 .and(ProductSpecification.hasBrands(brandIds))
-                .and(ProductSpecification.hasKeyword(keyword))
-                .and(ProductSpecification.hasStock());
+                .and(ProductSpecification.hasKeyword(keyword));
         if (priceRanges != null && !priceRanges.isEmpty()) {
             spec = spec.and(ProductSpecification.priceInRanges(priceRanges));
         }

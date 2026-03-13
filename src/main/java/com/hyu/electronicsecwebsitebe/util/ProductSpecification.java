@@ -63,8 +63,4 @@ public class ProductSpecification {
         };
     }
 
-    public static Specification<Product> hasStock() {
-        return (root, query, cb) -> cb.greaterThan(root.get("stock"), 0);
-    }
-
 }
