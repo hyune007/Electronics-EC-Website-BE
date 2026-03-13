@@ -29,7 +29,8 @@ public class ProductController {
                                                      @RequestParam(required = false) List<String> priceRanges,
                                                      @RequestParam(defaultValue = "0") BigDecimal minPrice,
                                                      @RequestParam(defaultValue = "0") BigDecimal maxPrice,
-                                                     @RequestParam(required = false) String priceSort) {
+                                                     @RequestParam(required = false) String priceSort,
+                                                     @RequestParam(defaultValue = "true") boolean inStockOnly) {
         if(minPrice.compareTo(maxPrice) > 0) {
             return ResponseEntity.badRequest ().body(Page.empty());
         }
@@ -41,7 +42,7 @@ public class ProductController {
             sort = Sort.by("price").descending();
         }
         Pageable pageable = PageRequest.of (p, 12, sort);
-        Page<Product> products = productService.getProducts (pageable, category, brand, q, priceRanges, minPrice, maxPrice);
+        Page<Product> products = productService.getProducts (pageable, category, brand, q, priceRanges, minPrice, maxPrice, inStockOnly);
         return ResponseEntity.ok (products);
     }
 

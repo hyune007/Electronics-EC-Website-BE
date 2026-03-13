@@ -528,4 +528,6 @@ INSERT INTO nhanvien (nv_id, nv_name, nv_password, nv_phone, nv_mail, nv_address
 VALUES ('NV001', 'Admin', '$2a$10$dXJ3SW6G7P50lGmMQgel2uSR1r0ICbMkvNJrHLbYCfLGqHaAcM1Hi', '0123456789', 'admin@polyubs.com', '123 FPT Polytechnic', 'ROLE_ADMIN',
         '1990-01-01');
 
+SELECT * FROM diachi;
 SELECT * FROM hoadon;
+SELECT * FROM chitiethoadon;

@@ -19,12 +19,14 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
 
     @Override
-    public Page<Product> getProducts(Pageable pageable, String categoryId, List<String> brandIds, String keyword, List<String> priceRanges, BigDecimal minPrice, BigDecimal maxPrice) {
+    public Page<Product> getProducts(Pageable pageable, String categoryId, List<String> brandIds, String keyword, List<String> priceRanges, BigDecimal minPrice, BigDecimal maxPrice, boolean inStockOnly) {
         Specification<Product> spec = Specification
                 .where(ProductSpecification.hasCategory(categoryId))
                 .and(ProductSpecification.hasBrands(brandIds))
-                .and(ProductSpecification.hasKeyword(keyword))
-                .and(ProductSpecification.hasStock());
+                .and(ProductSpecification.hasKeyword(keyword));
+        if (inStockOnly) {
+            spec = spec.and(ProductSpecification.hasStock());
+        }
         if (priceRanges != null && !priceRanges.isEmpty()) {
             spec = spec.and(ProductSpecification.priceInRanges(priceRanges));
         }
