@@ -13,11 +13,17 @@ on:
     branches: ["dev"]
     paths-ignore:
       - ".github/workflows/**"
+      - "poly_ubs_final.sql"
+      - "poly_ubs_table.sql"
+      - "poly_ubs_data.sql"
 
   pull_request:
     branches: ["dev"]
     paths-ignore:
       - ".github/workflows/**"
+      - "poly_ubs_final.sql"
+      - "poly_ubs_table.sql"
+      - "poly_ubs_data.sql"
 
 jobs:
   build:
