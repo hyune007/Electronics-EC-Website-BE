@@ -61,6 +61,8 @@ public class AddressServiceImpl implements AddressService {
             throw new IllegalArgumentException("Địa chỉ đã tồn tại");
         }
 
+        Integer cityId = ghnLocationService.getProvinceId(address.getCity());
+
         Integer districtId = ghnLocationService.getDistrictId(
                 address.getCity(),
                 address.getDistrict()
@@ -71,12 +73,12 @@ public class AddressServiceImpl implements AddressService {
                 address.getWard()
         );
 
-        if (districtId == null || wardCode == null) {
+        if (cityId == null || districtId == null || wardCode == null) {
             throw new IllegalArgumentException(
                     "Địa chỉ chưa được hỗ trợ giao hàng"
             );
         }
-
+        address.setGhnCityId(cityId);
         address.setGhnDistrictId(districtId);
         address.setGhnWardCode(wardCode);
         return addressRepository.save(address);

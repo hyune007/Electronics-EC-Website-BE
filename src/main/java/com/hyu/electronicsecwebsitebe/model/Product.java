@@ -36,6 +36,10 @@ public class Product {
     @JoinColumn(name = "sp_brand_id")
     private Brand brand;
 
+    @ManyToOne
+    @JoinColumn(name = "sp_promotion_id")
+    private Promotion promotion;
+
     public String getImage() {
         if (image == null || image.isBlank()) return null;
         // Lấy folder theo category
@@ -44,5 +48,19 @@ public class Product {
             categoryFolder = category.getId();
         }
         return "/photos/products/" + categoryFolder + "/" + image;
+    }
+
+    @Transient
+    private BigDecimal discountedPrice;
+
+    public BigDecimal getDiscountedPrice() {
+        if (promotion == null || !promotion.isActive()) {
+            return price;
+        }
+
+        BigDecimal percent = BigDecimal.valueOf(promotion.getDiscountPercentage())
+                .divide(BigDecimal.valueOf(100));
+
+        return price.subtract(price.multiply(percent));
     }
 }

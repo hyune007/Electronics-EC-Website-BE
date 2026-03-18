@@ -1,6 +1,8 @@
 package com.hyu.electronicsecwebsitebe.service.impl;
 
+import com.hyu.electronicsecwebsitebe.model.Product;
 import com.hyu.electronicsecwebsitebe.model.ShoppingCart;
+import com.hyu.electronicsecwebsitebe.repository.ProductRepository;
 import com.hyu.electronicsecwebsitebe.repository.ShoppingCartRepository;
 import com.hyu.electronicsecwebsitebe.service.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,9 @@ import java.util.UUID;
 public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Autowired
     private ShoppingCartRepository shoppingCartRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Override
     public List<ShoppingCart> getAllShoppingCarts() {
@@ -34,12 +39,34 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         if (shoppingCart.getId() == null || shoppingCart.getId().isEmpty()) {
             shoppingCart.setId(generateShoppingCartId());
         }
+        Product product = productRepository
+                .findById(shoppingCart.getProduct().getId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
+
+        int quantity = shoppingCart.getQuantity();
+
+        validateStock(product, quantity);
+
+        shoppingCart.setProduct(product);
+
         return shoppingCartRepository.save(shoppingCart);
     }
 
     @Override
     public ShoppingCart updateShoppingCart(ShoppingCart shoppingCart) {
-        return shoppingCartRepository.save(shoppingCart);
+
+        ShoppingCart existingCart = shoppingCartRepository
+                .findById(shoppingCart.getId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy giỏ hàng"));
+
+        Product product = existingCart.getProduct();
+        int quantity = shoppingCart.getQuantity();
+
+        validateStock(product, quantity);
+
+        existingCart.setQuantity(quantity);
+
+        return shoppingCartRepository.save(existingCart);
     }
 
     @Override
@@ -55,5 +82,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private String generateShoppingCartId() {
         // tạo mã random
         return "GH" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+    }
+
+    private void validateStock(Product product, int quantity) {
+        if (quantity <= 0) {
+            throw new RuntimeException("Số lượng phải lớn hơn 0");
+        }
+
+        if (quantity > product.getStock()) {
+            throw new RuntimeException("Số lượng sản phẩm trong giỏ vượt quá tồn kho");
+        }
     }
 }

@@ -28,4 +28,10 @@ public class Promotion {
 
     @Column(name = "km_end_date")
     private Instant endDate;
+
+    public boolean isActive() {
+        Instant now = Instant.now();
+        return (startDate == null || !startDate.isAfter(now))
+                && (endDate == null || !endDate.isBefore(now));
+    }
 }
