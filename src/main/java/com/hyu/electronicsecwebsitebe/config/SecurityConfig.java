@@ -170,7 +170,8 @@ public class SecurityConfig {
         config.setAllowedOrigins (List.of (
                 "https://ec-website-fe-312564370609.asia-southeast1.run.app",
                 "https://ubraintech.store",
-                "http://localhost:8080"
+                "http://localhost:8080",
+                "http://localhost:5137"
         ));
         config.setAllowedMethods (List.of ("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders (List.of ("*"));
