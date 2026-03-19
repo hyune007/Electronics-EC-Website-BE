@@ -106,7 +106,7 @@ create table hoadon
     nv_id          VARCHAR(8)   NULL,
     dc_id          VARCHAR(8)   NOT NULL,
     payment_method VARCHAR(255) NOT NULL,
-    shipping fee   INT          NOT NULL,
+    shipping_fee int NULL
     PRIMARY KEY (hd_id),
     FOREIGN KEY (kh_id) REFERENCES khachhang (kh_id),
     FOREIGN KEY (nv_id) REFERENCES nhanvien (nv_id),

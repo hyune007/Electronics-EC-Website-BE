@@ -14,6 +14,9 @@ public class DetailBill {
     @Column(name = "hdct_id")
     private String id;
 
+    @Column(name = "sp_price")
+    private BigDecimal price;
+
     @Column(name = "quantity")
     private int quantity;
 

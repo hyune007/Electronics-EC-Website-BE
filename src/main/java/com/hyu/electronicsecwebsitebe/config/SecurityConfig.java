@@ -52,6 +52,7 @@ public class SecurityConfig {
                         .requestMatchers (HttpMethod.GET, "/api/product-category/**").permitAll ()
                         .requestMatchers (HttpMethod.GET, "/api/promotion/**").permitAll ()
                         .requestMatchers (HttpMethod.GET, "/api/review/product/**").permitAll ()
+                        .requestMatchers (HttpMethod.GET, "/api/bill/**").permitAll ()
                         .requestMatchers ("/api/bill/shipping-fee/**").permitAll ()
 
                         .requestMatchers (HttpMethod.POST, "/api/payment/sepay/webhook", "/api/payment/sepay-webhook")
@@ -170,7 +171,8 @@ public class SecurityConfig {
         config.setAllowedOrigins (List.of (
                 "https://ec-website-fe-312564370609.asia-southeast1.run.app",
                 "https://ubraintech.store",
-                "http://localhost:8080"
+                "http://localhost:8080",
+                "http://localhost:5137"
         ));
         config.setAllowedMethods (List.of ("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders (List.of ("*"));

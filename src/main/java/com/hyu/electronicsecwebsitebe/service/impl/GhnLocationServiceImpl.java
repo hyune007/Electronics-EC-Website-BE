@@ -35,6 +35,25 @@ public class GhnLocationServiceImpl implements GhnLocationService {
     }
 
     @Override
+    public Integer getProvinceId(String city) {
+
+        String url = GHN_BASE_URL + "/province";
+
+        HttpEntity<Void> request = new HttpEntity<>(headers());
+        ResponseEntity<Map> response =
+                restTemplate.exchange(url, HttpMethod.GET, request, Map.class);
+
+        List<Map<String, Object>> provinces =
+                (List<Map<String, Object>>) response.getBody().get("data");
+
+        return provinces.stream()
+                .filter(p -> normalize(city).equalsIgnoreCase(normalize(p.get("ProvinceName").toString())))
+                .map(p -> (Integer) p.get("ProvinceID"))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
     public Integer getDistrictId(String city, String district) {
         Integer provinceId = getProvinceId(city);
         if (provinceId == null) return null;
@@ -75,6 +94,11 @@ public class GhnLocationServiceImpl implements GhnLocationService {
 
     @Override
     public int calculateShippingFee(Address address, int totalAmount) {
+        Integer shopProvinceId = 202;
+
+        if (shopProvinceId.equals(address.getGhnCityId())) {
+            return 0;
+        }
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -85,10 +109,10 @@ public class GhnLocationServiceImpl implements GhnLocationService {
         body.put("service_type_id", 2);
         body.put("to_district_id", address.getGhnDistrictId());
         body.put("to_ward_code", address.getGhnWardCode());
-        body.put("weight", 500);
-        body.put("length", 20);
-        body.put("width", 20);
-        body.put("height", 10);
+        body.put("weight", 1000);
+        body.put("length", 50);
+        body.put("width", 40);
+        body.put("height", 20);
         int insuranceValue = Math.min(totalAmount, 20000000);
         body.put("insurance_value", insuranceValue);
 
@@ -103,24 +127,6 @@ public class GhnLocationServiceImpl implements GhnLocationService {
 
         Map data = (Map) response.getBody().get("data");
         return (int) data.get("total");
-    }
-
-    private Integer getProvinceId(String city) {
-
-        String url = GHN_BASE_URL + "/province";
-
-        HttpEntity<Void> request = new HttpEntity<>(headers());
-        ResponseEntity<Map> response =
-                restTemplate.exchange(url, HttpMethod.GET, request, Map.class);
-
-        List<Map<String, Object>> provinces =
-                (List<Map<String, Object>>) response.getBody().get("data");
-
-        return provinces.stream()
-                .filter(p -> normalize(city).equalsIgnoreCase(normalize(p.get("ProvinceName").toString())))
-                .map(p -> (Integer) p.get("ProvinceID"))
-                .findFirst()
-                .orElse(null);
     }
 
     private String normalize(String s) {

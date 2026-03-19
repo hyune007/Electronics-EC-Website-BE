@@ -41,24 +41,26 @@ public class ShoppingCartController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<ShoppingCart> saveShoppingCart(@RequestBody ShoppingCart shoppingCart) {
-        if (shoppingCart.getId() != null && !shoppingCart.getId().isEmpty()
-                && shoppingCartService.existsById(shoppingCart.getId())) {
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<?> saveShoppingCart(@RequestBody ShoppingCart shoppingCart) {
+        try {
+            ShoppingCart savedShoppingCart = shoppingCartService.saveShoppingCart(shoppingCart);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedShoppingCart);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-        ShoppingCart savedShoppingCart = shoppingCartService.saveShoppingCart(shoppingCart);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedShoppingCart);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<ShoppingCart> updateShoppingCart(@PathVariable String id,
+    public ResponseEntity<?> updateShoppingCart(@PathVariable String id,
             @RequestBody ShoppingCart shoppingCart) {
-        if (!shoppingCartService.existsById(id)) {
-            return ResponseEntity.notFound().build();
+        try {
+            shoppingCart.setId(id);
+            ShoppingCart updatedShoppingCart = shoppingCartService.updateShoppingCart(shoppingCart);
+            return ResponseEntity.ok(updatedShoppingCart);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-        shoppingCart.setId(id);
-        ShoppingCart updatedShoppingCart = shoppingCartService.updateShoppingCart(shoppingCart);
-        return ResponseEntity.ok(updatedShoppingCart);
     }
 
     @DeleteMapping("/delete/{id}")

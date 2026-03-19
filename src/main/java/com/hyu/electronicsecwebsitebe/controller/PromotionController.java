@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -19,6 +20,17 @@ public class PromotionController {
     @GetMapping("/all")
     public ResponseEntity<List<Promotion>> findAll() {
         List<Promotion> promotions = promotionService.getAllPromotions ();
+        return ResponseEntity.ok (promotions);
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<Promotion>> findByActive() {
+        Instant now = Instant.now();
+        List<Promotion> promotions = promotionService.getAllPromotions ().stream()
+                .filter(p -> p.isActive())
+                .filter(p -> p.getStartDate().isBefore(now))
+                .filter(p -> p.getEndDate().isAfter(now))
+                .toList();
         return ResponseEntity.ok (promotions);
     }
 
