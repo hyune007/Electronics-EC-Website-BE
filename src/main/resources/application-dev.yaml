@@ -39,7 +39,7 @@ spring:
             trust: ${MAIL_HOST}
 
   mongodb:
-      uri: ${MONGODB_URI}
+      uri: ${MONGODB_URL}
       database: ${MONGODB_DATABASE}
 
 sepay:
