@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
@@ -54,7 +53,7 @@ public class PaymentServiceImpl implements PaymentService {
             throw new RuntimeException ("Tổng tiền không hợp lệ");
         }
 
-        String amount = total.setScale (0, RoundingMode.HALF_UP).toPlainString ();
+        String amount = total.toPlainString ();
         String description = bill.getId ();
         String qrUrl = buildQrUrl (accountNumber, bankCode, amount, description, qrTemplate);
 
@@ -94,8 +93,7 @@ public class PaymentServiceImpl implements PaymentService {
             return new SePayWebhookResponse (true, "Invalid bill amount");
         }
 
-        BigDecimal expectedRounded = expected.setScale (0, RoundingMode.HALF_UP);
-        if (received.compareTo (expectedRounded) != 0) {
+        if (received.compareTo (expected) != 0) {
             return new SePayWebhookResponse (true, "Amount mismatch");
         }
 
