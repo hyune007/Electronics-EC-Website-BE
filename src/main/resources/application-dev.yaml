@@ -14,7 +14,7 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-
+  #Mongodb
   # JPA/Hibernate
   jpa:
     hibernate:
@@ -37,6 +37,10 @@ spring:
             enable: true
           ssl:
             trust: ${MAIL_HOST}
+
+  mongodb:
+      uri: ${MONGODB_URI}
+      database: ${MONGODB_DATABASE}
 
 sepay:
   bank-code: ${SEPAY_BANK_CODE}
