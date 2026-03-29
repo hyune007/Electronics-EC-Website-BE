@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @Entity
@@ -27,8 +28,21 @@ public class Bill {
     @Column(name = "payment_method")
     private String paymentMethod;
 
+    @Column(name = "delivery_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date deliveryDate;
+
     @Column(name = "shipping_fee")
     private BigDecimal shippingFee;
+
+    @Column(name = "return_reason")
+    private String returnReason;
+
+    @Column(name = "return_date")
+    private Date returnDate;
+
+    @Column(name = "return_status")
+    private String returnStatus;
 
     @ManyToOne
     @JoinColumn(name = "kh_id")
@@ -53,5 +67,16 @@ public class Bill {
         return detailBills.stream()
                 .map(DetailBill::getTotal)
                 .reduce(shippingFee, BigDecimal::add);
+    }
+
+    @Transient
+    private BigDecimal totalRefund;
+
+    public BigDecimal getTotalRefund() {
+        if (detailBills == null) return BigDecimal.ZERO;
+        return detailBills.stream()
+                .map(DetailBill::getTotalRefund)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

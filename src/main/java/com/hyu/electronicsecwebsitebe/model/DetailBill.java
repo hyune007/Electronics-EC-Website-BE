@@ -23,6 +23,12 @@ public class DetailBill {
     @Column(name = "hdct_total")
     private BigDecimal total;
 
+    @Column(name = "returned_quantity")
+    private int returnedQuantity;
+
+    @Column(name = "total_refund")
+    private BigDecimal totalRefund;
+
     @ManyToOne
     @JoinColumn(name = "hd_id")
     @JsonBackReference
