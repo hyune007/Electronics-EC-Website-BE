@@ -1,5 +1,6 @@
 package com.hyu.electronicsecwebsitebe.service.impl;
 
+import com.hyu.electronicsecwebsitebe.dto.request.ReturnItem;
 import com.hyu.electronicsecwebsitebe.model.*;
 import com.hyu.electronicsecwebsitebe.repository.*;
 import com.hyu.electronicsecwebsitebe.service.BillService;
@@ -48,6 +49,9 @@ public class BillServiceImpl implements BillService {
         if (employeeId != null) {
             Employee employee = employeeService.findById(employeeId);
             bill.setEmployee(employee);
+        }
+        if("Đã giao".equalsIgnoreCase(status)){
+            bill.setDeliveryDate(new Date());
         }
         bill.setStatus(status);
         return billRepository.save(bill);
@@ -118,6 +122,121 @@ public class BillServiceImpl implements BillService {
 //        System.out.printf("Đã xóa thành công\n");
 
         return savedBill;
+    }
+
+    @Transactional
+    @Override
+    public Bill requestReturnBill(String billId, String reason, List<ReturnItem> returnItems) {
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy hóa đơn với ID: " + billId));
+
+
+        if (bill.getReturnDate() != null || "Yêu cầu trả hàng".equalsIgnoreCase(bill.getStatus()) || "Đã trả hàng".equalsIgnoreCase(bill.getStatus()) || "Từ chối trả hàng".equalsIgnoreCase(bill.getStatus())) {
+            throw new RuntimeException("Đơn hàng này đã được yêu cầu trả hàng trước đó. Mỗi đơn chỉ được hỗ trợ trả 1 lần!");
+        }
+
+        if (!"Đã giao".equalsIgnoreCase(bill.getStatus())) {
+            throw new RuntimeException("Chỉ có thể yêu cầu trả hàng cho đơn hàng đã hoàn tất!");
+        }
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(bill.getDeliveryDate());
+        cal.add(Calendar.DAY_OF_MONTH, 1); // Cộng thêm 1 ngày vào thời gian gốc
+
+        Date deadline = cal.getTime(); // Hạn chót được phép trả hàng
+        Date now = new Date();
+
+        if (now.after(deadline)) {
+            throw new RuntimeException("Đã quá thời hạn 1 ngày. Bạn không thể yêu cầu trả hàng cho đơn này nữa!");
+        }
+
+        // Cập nhật thông tin chung của Bill
+        bill.setStatus("Yêu cầu trả hàng");
+        bill.setReturnReason(reason);
+        bill.setReturnDate(new Date());
+
+        // Xử lý từng món hàng khách muốn trả
+        for (ReturnItem item : returnItems) {
+            DetailBill detail = detailBillRepository.findById(item.getDetailBillId())
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy chi tiết hóa đơn"));
+
+            // Kiểm tra bảo mật: Chi tiết này có đúng thuộc về Bill này không?
+            if (!detail.getBill().getId().equals(bill.getId())) {
+                throw new RuntimeException("Sản phẩm không thuộc hóa đơn này!");
+            }
+
+            // Kiểm tra số lượng: Trả > 0 và <= số đã mua
+            if (item.getReturnQuantity() <= 0 || item.getReturnQuantity() > detail.getQuantity()) {
+                throw new RuntimeException("Số lượng trả không hợp lệ đối với sản phẩm: " + detail.getProduct().getName());
+            }
+
+            // Cập nhật số lượng trả và tính tiền hoàn cho dòng này
+            detail.setReturnedQuantity(item.getReturnQuantity());
+
+            // Lấy giá lúc mua (price) nhân với số lượng trả
+            BigDecimal refundForThisItem = detail.getPrice().multiply(BigDecimal.valueOf(item.getReturnQuantity()));
+            detail.setTotalRefund(refundForThisItem);
+
+            // Lưu lại thay đổi của DetailBill
+            detailBillRepository.save(detail);
+        }
+
+        return billRepository.save(bill);
+    }
+
+    @Transactional
+    @Override
+    public Bill approveReturnBill(String billId) {
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy hóa đơn"));
+
+        if (!"Yêu cầu trả hàng".equalsIgnoreCase(bill.getStatus())) {
+            throw new RuntimeException("Hóa đơn này không có yêu cầu trả hàng hợp lệ!");
+        }
+
+        // Vòng lặp hoàn lại Tồn kho (Stock) dựa trên số lượng trả (returnedQuantity)
+        List<DetailBill> detailBills = bill.getDetailBills();
+        for (DetailBill detail : detailBills) {
+            if (detail.getReturnedQuantity() > 0) {
+                Product product = detail.getProduct();
+
+                // CHỈ cộng lại số lượng khách thực tế trả (returnedQuantity)
+                int newStock = product.getStock() + detail.getReturnedQuantity();
+                product.setStock(newStock);
+
+                productRepository.save(product);
+            }
+        }
+
+        bill.setStatus("Đã trả hàng");
+
+        return billRepository.save(bill);
+    }
+
+    /**
+     * Nhân viên TỪ CHỐI yêu cầu trả hàng
+     */
+    @Transactional
+    @Override
+    public Bill rejectReturnBill(String billId) {
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy hóa đơn"));
+
+        if (!"Yêu cầu trả hàng".equalsIgnoreCase(bill.getStatus())) {
+            throw new RuntimeException("Hóa đơn này không hợp lệ để từ chối!");
+        }
+
+        bill.setStatus("Từ chối trả hàng");
+
+        for (DetailBill detail : bill.getDetailBills()) {
+            if (detail.getReturnedQuantity() > 0) {
+                detail.setReturnedQuantity(0);
+                detail.setTotalRefund(null);
+                detailBillRepository.save(detail);
+            }
+        }
+
+        return billRepository.save(bill);
     }
 
     private String generateBillId() {

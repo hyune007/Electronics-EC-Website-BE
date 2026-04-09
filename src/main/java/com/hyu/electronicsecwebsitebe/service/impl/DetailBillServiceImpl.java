@@ -1,6 +1,5 @@
 package com.hyu.electronicsecwebsitebe.service.impl;
 
-import com.hyu.electronicsecwebsitebe.model.Bill;
 import com.hyu.electronicsecwebsitebe.model.DetailBill;
 import com.hyu.electronicsecwebsitebe.repository.DetailBillRepository;
 import com.hyu.electronicsecwebsitebe.service.DetailBillService;

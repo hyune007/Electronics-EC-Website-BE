@@ -139,6 +139,11 @@ public class SecurityConfig {
                         .requestMatchers (HttpMethod.DELETE, "/api/promotion/**")
                         .hasAnyAuthority (ROLE_EMPLOYEE, ROLE_ADMIN)
 
+                        .requestMatchers (HttpMethod.PUT, "/api/bill/approve-return")
+                        .hasAnyAuthority (ROLE_EMPLOYEE, ROLE_ADMIN)
+                        .requestMatchers (HttpMethod.PUT, "/api/bill/reject-return")
+                        .hasAnyAuthority (ROLE_EMPLOYEE, ROLE_ADMIN)
+
                         .requestMatchers (HttpMethod.POST, "/api/product-category/**")
                         .hasAnyAuthority (ROLE_EMPLOYEE, ROLE_ADMIN)
                         .requestMatchers (HttpMethod.DELETE, "/api/product-category/**")
