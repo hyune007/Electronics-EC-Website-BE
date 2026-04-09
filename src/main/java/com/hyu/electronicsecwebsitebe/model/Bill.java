@@ -41,9 +41,6 @@ public class Bill {
     @Column(name = "return_date")
     private Date returnDate;
 
-    @Column(name = "return_status")
-    private String returnStatus;
-
     @ManyToOne
     @JoinColumn(name = "kh_id")
     private Customer customer;
@@ -67,16 +64,5 @@ public class Bill {
         return detailBills.stream()
                 .map(DetailBill::getTotal)
                 .reduce(shippingFee, BigDecimal::add);
-    }
-
-    @Transient
-    private BigDecimal totalRefund;
-
-    public BigDecimal getTotalRefund() {
-        if (detailBills == null) return BigDecimal.ZERO;
-        return detailBills.stream()
-                .map(DetailBill::getTotalRefund)
-                .filter(Objects::nonNull)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

@@ -1,31 +1,32 @@
 package com.hyu.electronicsecwebsitebe;
+import com.mongodb.client.MongoDatabase;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import com.mongodb.client.MongoClient;
 
-@Component
-public class MongoConnectionTest implements CommandLineRunner {
+@Configuration
+public class MongoConnectionTest {
 
-    private final MongoTemplate mongoTemplate;
+    @Bean
+    CommandLineRunner testConnection(MongoClient mongoClient) {
+        return args -> {
+            try {
+                System.out.println("✅ Kết nối MongoDB thành công!");
 
-    public MongoConnectionTest(MongoTemplate mongoTemplate) {
-        this.mongoTemplate = mongoTemplate;
-    }
+                // 👉 Lấy database cụ thể
+                MongoDatabase db = mongoClient.getDatabase("chatdatabase");
 
-    @Override
-    public void run(String... args) throws Exception {
+                System.out.println("📂 Database: " + db.getName());
 
-        System.out.println("=== TEST CONNECT MONGODB ===");
+                // 👉 List collections (ĐÚNG)
+                db.listCollectionNames()
+                        .forEach(col -> System.out.println("📁 Collection: " + col));
 
-        try {
-            // Ping DB
-            mongoTemplate.getDb().runCommand(new org.bson.Document("ping", 1));
-
-            System.out.println("✅ MongoDB connected successfully!");
-
-        } catch (Exception e) {
-            System.out.println("❌ MongoDB connection failed!");
-            e.printStackTrace();
-        }
+            } catch (Exception e) {
+                System.out.println("❌ Kết nối thất bại!");
+                e.printStackTrace();
+            }
+        };
     }
 }

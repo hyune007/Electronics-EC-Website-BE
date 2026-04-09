@@ -139,6 +139,11 @@ public class SecurityConfig {
                         .requestMatchers (HttpMethod.DELETE, "/api/promotion/**")
                         .hasAnyAuthority (ROLE_EMPLOYEE, ROLE_ADMIN)
 
+                        .requestMatchers (HttpMethod.PUT, "/api/bill/approve-return")
+                        .hasAnyAuthority (ROLE_EMPLOYEE, ROLE_ADMIN)
+                        .requestMatchers (HttpMethod.PUT, "/api/bill/reject-return")
+                        .hasAnyAuthority (ROLE_EMPLOYEE, ROLE_ADMIN)
+
                         .requestMatchers (HttpMethod.POST, "/api/product-category/**")
                         .hasAnyAuthority (ROLE_EMPLOYEE, ROLE_ADMIN)
                         .requestMatchers (HttpMethod.DELETE, "/api/product-category/**")
@@ -172,7 +177,7 @@ public class SecurityConfig {
                 "https://ec-website-fe-312564370609.asia-southeast1.run.app",
                 "https://ubraintech.store",
                 "http://localhost:8080",
-                "http://localhost:5137"
+                "http://localhost:5173"
         ));
         config.setAllowedMethods (List.of ("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders (List.of ("*"));

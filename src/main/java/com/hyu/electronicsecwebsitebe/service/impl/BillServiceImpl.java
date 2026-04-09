@@ -130,12 +130,13 @@ public class BillServiceImpl implements BillService {
         Bill bill = billRepository.findById(billId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy hóa đơn với ID: " + billId));
 
-        if (!"Đã giao".equalsIgnoreCase(bill.getStatus())) {
-            throw new RuntimeException("Chỉ có thể yêu cầu trả hàng cho đơn hàng đã hoàn tất!");
+
+        if (bill.getReturnDate() != null || "Yêu cầu trả hàng".equalsIgnoreCase(bill.getStatus()) || "Đã trả hàng".equalsIgnoreCase(bill.getStatus()) || "Từ chối trả hàng".equalsIgnoreCase(bill.getStatus())) {
+            throw new RuntimeException("Đơn hàng này đã được yêu cầu trả hàng trước đó. Mỗi đơn chỉ được hỗ trợ trả 1 lần!");
         }
 
-        if (bill.getReturnDate() != null || bill.getReturnStatus() != null) {
-            throw new RuntimeException("Đơn hàng này đã được yêu cầu trả hàng trước đó. Mỗi đơn chỉ được hỗ trợ trả 1 lần!");
+        if (!"Đã giao".equalsIgnoreCase(bill.getStatus())) {
+            throw new RuntimeException("Chỉ có thể yêu cầu trả hàng cho đơn hàng đã hoàn tất!");
         }
 
         Calendar cal = Calendar.getInstance();
@@ -150,7 +151,7 @@ public class BillServiceImpl implements BillService {
         }
 
         // Cập nhật thông tin chung của Bill
-        bill.setReturnStatus("Yêu cầu trả hàng");
+        bill.setStatus("Yêu cầu trả hàng");
         bill.setReturnReason(reason);
         bill.setReturnDate(new Date());
 
@@ -207,7 +208,7 @@ public class BillServiceImpl implements BillService {
             }
         }
 
-        bill.setReturnStatus("Đã trả hàng");
+        bill.setStatus("Đã trả hàng");
 
         return billRepository.save(bill);
     }
@@ -225,7 +226,7 @@ public class BillServiceImpl implements BillService {
             throw new RuntimeException("Hóa đơn này không hợp lệ để từ chối!");
         }
 
-        bill.setReturnStatus("Từ chối trả hàng");
+        bill.setStatus("Từ chối trả hàng");
 
         for (DetailBill detail : bill.getDetailBills()) {
             if (detail.getReturnedQuantity() > 0) {

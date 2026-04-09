@@ -24,7 +24,7 @@ public class DetailBill {
     private BigDecimal total;
 
     @Column(name = "returned_quantity")
-    private int returnedQuantity;
+    private Integer returnedQuantity;
 
     @Column(name = "total_refund")
     private BigDecimal totalRefund;

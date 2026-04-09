@@ -1,6 +1,7 @@
 package com.hyu.electronicsecwebsitebe.controller;
 
 import com.hyu.electronicsecwebsitebe.dto.request.ReturnItem;
+import com.hyu.electronicsecwebsitebe.dto.request.ReturnRequest;
 import com.hyu.electronicsecwebsitebe.model.*;
 import com.hyu.electronicsecwebsitebe.repository.AddressRepository;
 import com.hyu.electronicsecwebsitebe.repository.CustomerRepository;
@@ -101,9 +102,13 @@ public class BillController {
     }
 
     @PutMapping("/request-return")
-    public ResponseEntity<?> requestReturnBill(@RequestParam String billId, @RequestParam(required = false) String reason, @RequestParam List<ReturnItem> returnItems){
+    public ResponseEntity<?> requestReturnBill(@RequestBody ReturnRequest request){
         try {
-            Bill bill = billService.requestReturnBill (billId, reason, returnItems);
+            Bill bill = billService.requestReturnBill(
+                    request.getBillId(),
+                    request.getReason(),
+                    request.getReturnItems()
+            );
             return ResponseEntity.ok (bill);
         } catch (RuntimeException e) {
             return ResponseEntity
