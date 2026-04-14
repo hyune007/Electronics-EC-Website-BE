@@ -69,7 +69,11 @@ create table diachi
     dc_id            VARCHAR(8)   NOT NULL,
     kh_id            VARCHAR(8)   NOT NULL,
     dc_city          VARCHAR(50)  NOT NULL,
+    ghn_city_id INT NOT NULL,
+    dc_district VARCHAR(50)  NOT NULL,
+    ghn_district_id INT NOT NULL,
     dc_ward          VARCHAR(50)  NOT NULL,
+    ghn_ward_code VARCHAR(15)  NOT NULL,
     dc_detailaddress VARCHAR(255) NOT NULL,
     dc_is_default    TINYINT(1)   NOT NULL DEFAULT 0,
     PRIMARY KEY (dc_id),
@@ -112,21 +116,26 @@ create table hoadon
     nv_id          VARCHAR(8)   NULL,
     dc_id          VARCHAR(8)   NOT NULL,
     payment_method VARCHAR(255) NOT NULL,
+    delivery_date DATE NULL,
+    shipping_fee int NULL,
+    return_reason VARCHAR(255) NULL,
+    return_date DATE NULL,
     PRIMARY KEY (hd_id),
     FOREIGN KEY (kh_id) REFERENCES khachhang (kh_id),
     FOREIGN KEY (nv_id) REFERENCES nhanvien (nv_id),
     FOREIGN KEY (dc_id) REFERENCES diachi (dc_id)
 );
 
-ALTER TABLE hoadon ADD COLUMN order_code BIGINT NULL;
-
 create table chitiethoadon
 (
     hdct_id    VARCHAR(8)     NOT NULL,
     hd_id      VARCHAR(8)     NOT NULL,
     sp_id      VARCHAR(8)     NOT NULL,
+    sp_price DECIMAL(18) NOT NULL,
     quantity   INT            NOT NULL,
     hdct_total DECIMAL(18, 0) NOT NULL,
+    returned_quantity INT NULL,
+    total_refund DECIMAL(18) NULL,
     PRIMARY KEY (hdct_id),
     FOREIGN KEY (hd_id) REFERENCES hoadon (hd_id),
     FOREIGN KEY (sp_id) REFERENCES sanpham (sp_id)
