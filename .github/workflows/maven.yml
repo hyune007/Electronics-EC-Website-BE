@@ -39,6 +39,10 @@ jobs:
       MONGODB_DATABASE: ${{ secrets.MONGODB_DATABASE }}
       MONGODB_URL: ${{ secrets.MONGODB_URL }}
 
+      AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+      AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+      AZURE_OPENAI_DEPLOYMENT_NAME: ${{ secrets.AZURE_OPENAI_DEPLOYMENT_NAME }}
+
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
       GHN_TOKEN: ${{ secrets.GHN_TOKEN }}
 
