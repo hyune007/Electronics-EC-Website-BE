@@ -1,6 +1,7 @@
 package com.hyu.electronicsecwebsitebe.controller;
 
-import com.hyu.electronicsecwebsitebe.dto.request.CreateBillRequest;
+import com.hyu.electronicsecwebsitebe.dto.request.ReturnItem;
+import com.hyu.electronicsecwebsitebe.dto.request.ReturnRequest;
 import com.hyu.electronicsecwebsitebe.model.*;
 import com.hyu.electronicsecwebsitebe.repository.AddressRepository;
 import com.hyu.electronicsecwebsitebe.repository.CustomerRepository;
@@ -98,6 +99,46 @@ public class BillController {
         Bill bill = billService.createbillfromcart (customer, employee, address, paymentMethod);
 
         return ResponseEntity.ok (bill);
+    }
+
+    @PutMapping("/request-return")
+    public ResponseEntity<?> requestReturnBill(@RequestBody ReturnRequest request){
+        try {
+            Bill bill = billService.requestReturnBill(
+                    request.getBillId(),
+                    request.getReason(),
+                    request.getReturnItems()
+            );
+            return ResponseEntity.ok (bill);
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/approve-return")
+    public ResponseEntity<?> approveReturnBill(@RequestParam String billId){
+        try {
+            Bill bill = billService.approveReturnBill(billId);
+            return ResponseEntity.ok (bill);
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/reject-return")
+    public ResponseEntity<?> rejectReturnBill(@RequestParam String billId){
+        try {
+            Bill bill = billService.rejectReturnBill(billId);
+            return ResponseEntity.ok (bill);
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
     }
 }
 /*

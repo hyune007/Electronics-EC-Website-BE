@@ -46,6 +46,7 @@ public class SecurityConfig {
                         session.sessionCreationPolicy (SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests (auth -> auth
                         // PUBLIC
+//                        .requestMatchers ("/api/test/**").permitAll ()
                         .requestMatchers ("/api/auth/**").permitAll ()
                         .requestMatchers (HttpMethod.GET, "/api/product/**").permitAll ()
                         .requestMatchers (HttpMethod.GET, "/api/brand/**").permitAll ()
@@ -54,7 +55,7 @@ public class SecurityConfig {
                         .requestMatchers (HttpMethod.GET, "/api/review/product/**").permitAll ()
                         .requestMatchers (HttpMethod.GET, "/api/bill/**").permitAll ()
                         .requestMatchers ("/api/bill/shipping-fee/**").permitAll ()
-
+                        .requestMatchers ("/api/ai/**").permitAll ()
                         .requestMatchers (HttpMethod.POST, "/api/payment/sepay/webhook", "/api/payment/sepay-webhook")
                         .permitAll ()
                         .requestMatchers (HttpMethod.POST, "/api/payment/sepay/session")
@@ -137,6 +138,11 @@ public class SecurityConfig {
                         .requestMatchers (HttpMethod.PUT, "/api/promotion/**")
                         .hasAnyAuthority (ROLE_EMPLOYEE, ROLE_ADMIN)
                         .requestMatchers (HttpMethod.DELETE, "/api/promotion/**")
+                        .hasAnyAuthority (ROLE_EMPLOYEE, ROLE_ADMIN)
+
+                        .requestMatchers (HttpMethod.PUT, "/api/bill/approve-return")
+                        .hasAnyAuthority (ROLE_EMPLOYEE, ROLE_ADMIN)
+                        .requestMatchers (HttpMethod.PUT, "/api/bill/reject-return")
                         .hasAnyAuthority (ROLE_EMPLOYEE, ROLE_ADMIN)
 
                         .requestMatchers (HttpMethod.POST, "/api/product-category/**")

@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @Entity
@@ -27,8 +28,18 @@ public class Bill {
     @Column(name = "payment_method")
     private String paymentMethod;
 
+    @Column(name = "delivery_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date deliveryDate;
+
     @Column(name = "shipping_fee")
     private BigDecimal shippingFee;
+
+    @Column(name = "return_reason")
+    private String returnReason;
+
+    @Column(name = "return_date")
+    private Date returnDate;
 
     @ManyToOne
     @JoinColumn(name = "kh_id")
