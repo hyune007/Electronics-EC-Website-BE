@@ -1,6 +1,5 @@
 package com.hyu.electronicsecwebsitebe.controller;
 
-import com.hyu.electronicsecwebsitebe.dto.request.ReturnItem;
 import com.hyu.electronicsecwebsitebe.dto.request.ReturnRequest;
 import com.hyu.electronicsecwebsitebe.model.*;
 import com.hyu.electronicsecwebsitebe.repository.AddressRepository;
@@ -10,6 +9,7 @@ import com.hyu.electronicsecwebsitebe.service.impl.BillServiceImpl;
 import com.hyu.electronicsecwebsitebe.service.impl.GhnLocationServiceImpl;
 import com.hyu.electronicsecwebsitebe.service.impl.ShoppingCartServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -97,7 +97,7 @@ public class BillController {
 
         Bill bill = billService.createbillfromcart (customer, employee, address, paymentMethod);
 
-        return ResponseEntity.ok (bill);
+        return ResponseEntity.status(HttpStatus.CREATED).body(bill);
     }
 
     @PutMapping("/request-return")

@@ -8,9 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -31,6 +36,23 @@ public class ProductServiceImpl implements ProductService {
             spec = spec.and(ProductSpecification.priceBetween(minPrice, maxPrice));
         }
         return productRepository.findAll(spec, pageable);
+    }
+
+    @Override
+    public void uploadPhoto(Product product, MultipartFile file) {
+        String uploadDir = "src/main/resources/static/photos/products";
+        String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+        String fileName = product.getId() + extension;
+        try {
+            Path path = Paths.get(uploadDir + fileName);
+            Files.write(path, file.getBytes());
+            System.out.printf(path.toString());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        return;
     }
 
     @Override

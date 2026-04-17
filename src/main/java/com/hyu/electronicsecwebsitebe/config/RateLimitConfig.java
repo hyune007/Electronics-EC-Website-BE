@@ -24,9 +24,10 @@ public class RateLimitConfig extends OncePerRequestFilter {
         Bandwidth limit;
 
         if (path.startsWith("/api/ai/")) {
-            limit = Bandwidth.classic(10, Refill.greedy(5, Duration.ofMinutes(1)));
-        } else {
-            limit = Bandwidth.classic(20, Refill.greedy(10, Duration.ofMinutes(1)));
+            limit = Bandwidth.classic(50, Refill.greedy(10, Duration.ofMinutes(1)));
+        }
+        else {
+            limit = Bandwidth.classic(10000, Refill.greedy(1000, Duration.ofMinutes(1)));
         }
 
         return Bucket.builder()
