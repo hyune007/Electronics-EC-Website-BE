@@ -10,7 +10,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: ["dev"]
+    branches: ["dev","nhatnm"]
     paths-ignore:
       # - ".github/workflows/**"
       - "poly_ubs_final.sql"
