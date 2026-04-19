@@ -23,11 +23,14 @@ public class RateLimitConfig extends OncePerRequestFilter {
     private Bucket createBucket(String path) {
         Bandwidth limit;
 
-        if (path.startsWith("/api/ai/")) {
-            limit = Bandwidth.classic(50, Refill.greedy(10, Duration.ofMinutes(1)));
+        if (path.startsWith("/api/ai/chat")) {
+            limit = Bandwidth.classic(10, Refill.greedy(6, Duration.ofMinutes(1)));
+        }
+        else if(path.startsWith("/api/ai/compare")) {
+            limit = Bandwidth.classic(6, Refill.greedy(3, Duration.ofMinutes(1)));
         }
         else {
-            limit = Bandwidth.classic(10000, Refill.greedy(1000, Duration.ofMinutes(1)));
+            limit = Bandwidth.classic(100, Refill.greedy(100, Duration.ofMinutes(1)));
         }
 
         return Bucket.builder()

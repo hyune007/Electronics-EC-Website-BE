@@ -23,14 +23,37 @@ public class ChatAIController {
         this.chatModel = chatModel;
     }
 
-    @GetMapping("/api/ai/generate")
-    public Map<String, String> generate(@RequestParam("message") String message) {
+    @GetMapping("/api/ai/chat")
+    public Map<String, String> chat(@RequestParam("message") String message) {
 
         SystemMessage systemMessage = new SystemMessage("""
         Bạn là một trợ lý AI chuyên về tư vấn thiết bị điện tử.
         - Trả lời ngắn gọn, dễ hiểu
         - Luôn thân thiện
         - Nếu không biết thì nói không biết
+        - Chỉ được trả lới về thiết bị điện tử, không trả lời về lĩnh vực khác
+    """);
+
+        UserMessage userMessage = new UserMessage(message);
+
+        Prompt prompt = new Prompt(systemMessage, userMessage);
+
+        ChatResponse response = chatModel.call(prompt);
+
+        String content = response.getResult().getOutput().getText();
+
+        return Map.of("generation", content);
+    }
+
+    @GetMapping("api/ai/compare")
+    public Map<String, String> compare(@RequestParam("message") String message) {
+
+        SystemMessage systemMessage = new SystemMessage("""
+        Bạn là một trợ lý AI chuyên về tư vấn thiết bị điện tử.
+        - Trả lời ngắn gọn, dễ hiểu
+        - Luôn thân thiện
+        - Nếu không biết thì nói không biết
+        - Chỉ được trả lới về thiết bị điện tử, không trả lời về lĩnh vực khác
     """);
 
         UserMessage userMessage = new UserMessage(message);
