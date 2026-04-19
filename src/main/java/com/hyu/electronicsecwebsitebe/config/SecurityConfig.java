@@ -57,8 +57,10 @@ public class SecurityConfig {
                         .requestMatchers (HttpMethod.GET, "/api/bill/**").permitAll ()
                         .requestMatchers ("/api/bill/shipping-fee/**").permitAll ()
                         .requestMatchers ("/api/ai/**").permitAll ()
+                        .requestMatchers("/chat/**").permitAll()
                         .requestMatchers (HttpMethod.POST, "/api/payment/sepay/webhook", "/api/payment/sepay-webhook")
                         .permitAll ()
+
 
                         .requestMatchers (HttpMethod.POST, "/api/payment/sepay/session")
                         .hasAnyAuthority (ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
