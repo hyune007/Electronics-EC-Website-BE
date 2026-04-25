@@ -12,7 +12,7 @@ on:
   push:
     branches: ["dev"]
     paths-ignore:
-      # - ".github/workflows/**"
+      - ".github/workflows/**"
       - "poly_ubs_final.sql"
       - "poly_ubs_table.sql"
       - "poly_ubs_data.sql"
@@ -20,7 +20,7 @@ on:
   pull_request:
     branches: ["dev"]
     paths-ignore:
-      # - ".github/workflows/**"
+      - ".github/workflows/**"
       - "poly_ubs_final.sql"
       - "poly_ubs_table.sql"
       - "poly_ubs_data.sql"
