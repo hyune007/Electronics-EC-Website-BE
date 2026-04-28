@@ -20,5 +20,13 @@ COPY --from=build /app/target/*.jar app.jar
 # Copy Firebase service account key (neu co)
 # COPY serviceAccountKey.json .
 
+# Tao thu muc upload cho anh san pham
+RUN mkdir -p /app/uploads/photos/products
+
+# Mount volume de luu file upload ben ngoai container
+VOLUME /app/uploads
+
+ENV UPLOAD_DIR=/app/uploads
+
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
