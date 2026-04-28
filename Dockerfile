@@ -17,6 +17,7 @@ WORKDIR /app
 # Copy JAR tu stage build
 COPY --from=build /app/target/*.jar app.jar
 
+COPY --from=build /app/src/main/resources/static ./static
 # Copy Firebase service account key (neu co)
 # COPY serviceAccountKey.json .
 
