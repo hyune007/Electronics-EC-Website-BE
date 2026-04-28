@@ -40,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void uploadPhoto(Product product, MultipartFile file) {
-        String uploadDir = "src/main/resources/static/photos/products";
+        String uploadDir = "src/main/resources/static/photos/products/"+product.getCategory().getId()+"/";
         String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
         String fileName = product.getId() + extension;
         try {
