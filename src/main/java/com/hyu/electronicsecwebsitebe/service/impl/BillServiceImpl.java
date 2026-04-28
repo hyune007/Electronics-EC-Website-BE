@@ -43,9 +43,19 @@ public class BillServiceImpl implements BillService {
         return  billRepository.findByCustomerId(customerId);
     }
 
+    public List<Bill> getBillsByEmployee(String employeeId) {
+        return billRepository.findByEmployeeId(employeeId);
+    }
+
+    @Transactional
     public Bill updateBillStatus(String billId, String status, String employeeId) {
         Bill bill = billRepository.findById(billId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy hóa đơn"));
+        if ("Đang giao".equals(status)) {
+            if (!"Đơn đang chờ giao".equals(bill.getStatus())) {
+                throw new RuntimeException("Đơn đã được nhận bởi shipper khác");
+            }
+        }
         if (employeeId != null) {
             Employee employee = employeeService.findById(employeeId);
             bill.setEmployee(employee);

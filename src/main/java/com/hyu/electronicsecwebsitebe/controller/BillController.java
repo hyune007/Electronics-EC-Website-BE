@@ -43,6 +43,13 @@ public class BillController {
         return ResponseEntity.ok (billService.getAllBills ());
     }
 
+    @GetMapping("/by-employee")
+    public ResponseEntity<List<Bill>> getBillsByEmployee(
+            @RequestParam String employeeId
+    ) {
+        return ResponseEntity.ok(billService.getBillsByEmployee(employeeId));
+    }
+
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<Bill>> billByCustomerId(@PathVariable String customerId) {
         List<Bill> bill = billService.findByCustomerId (customerId);
@@ -73,8 +80,12 @@ public class BillController {
             @RequestParam String status,
             @RequestParam(required = false) String employeeId
     ) {
-        Bill updatedBill = billService.updateBillStatus(billId, status, employeeId);
-        return ResponseEntity.ok(updatedBill);
+        try {
+            Bill updatedBill = billService.updateBillStatus(billId, status, employeeId);
+            return ResponseEntity.ok(updatedBill);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest ().body(e.getMessage());
+        }
     }
 
     @PostMapping("/create")
