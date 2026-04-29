@@ -1,6 +1,5 @@
 package com.hyu.electronicsecwebsitebe.controller;
 
-import com.hyu.electronicsecwebsitebe.dto.request.ReturnItem;
 import com.hyu.electronicsecwebsitebe.dto.request.ReturnRequest;
 import com.hyu.electronicsecwebsitebe.model.*;
 import com.hyu.electronicsecwebsitebe.repository.AddressRepository;
@@ -10,6 +9,7 @@ import com.hyu.electronicsecwebsitebe.service.impl.BillServiceImpl;
 import com.hyu.electronicsecwebsitebe.service.impl.GhnLocationServiceImpl;
 import com.hyu.electronicsecwebsitebe.service.impl.ShoppingCartServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +43,13 @@ public class BillController {
         return ResponseEntity.ok (billService.getAllBills ());
     }
 
+    @GetMapping("/by-employee")
+    public ResponseEntity<List<Bill>> getBillsByEmployee(
+            @RequestParam String employeeId
+    ) {
+        return ResponseEntity.ok(billService.getBillsByEmployee(employeeId));
+    }
+
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<Bill>> billByCustomerId(@PathVariable String customerId) {
         List<Bill> bill = billService.findByCustomerId (customerId);
@@ -67,15 +74,18 @@ public class BillController {
 
         return ResponseEntity.ok(fee);
     }
-// http://localhost:8080/api/bill/update-status/HD44C133?status=Hoàn thành giao dịch (Test url với method PUT)
     @PutMapping("update-status/{billId}")
     public ResponseEntity<?> updateBillStatus(
             @PathVariable String billId,
             @RequestParam String status,
             @RequestParam(required = false) String employeeId
     ) {
-        Bill updatedBill = billService.updateBillStatus(billId, status, employeeId);
-        return ResponseEntity.ok(updatedBill);
+        try {
+            Bill updatedBill = billService.updateBillStatus(billId, status, employeeId);
+            return ResponseEntity.ok(updatedBill);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest ().body(e.getMessage());
+        }
     }
 
     @PostMapping("/create")
@@ -98,7 +108,7 @@ public class BillController {
 
         Bill bill = billService.createbillfromcart (customer, employee, address, paymentMethod);
 
-        return ResponseEntity.ok (bill);
+        return ResponseEntity.status(HttpStatus.CREATED).body(bill);
     }
 
     @PutMapping("/request-return")
@@ -141,17 +151,3 @@ public class BillController {
         }
     }
 }
-/*
-INSERT INTO giohang (gh_id, sp_quantity, kh_id, sp_id)
-VALUES
-('GH0001', 1, 'KH001', 'SP001'),
-('GH0002', 2, 'KH001', 'SP003'),
-('GH0003', 1, 'KH001', 'SP081'),
-('GH0004', 1, 'KH002', 'SP014'),
-('GH0005', 1, 'KH002', 'SP072');
-
-INSERT INTO diachi (dc_id, kh_id, dc_city, dc_ward, dc_detailaddress, dc_is_default)
-VALUES ('DC001', 'KH001', 'Hồ Chí Minh', 'Quận 1', '123 Nguyễn Thị Minh Khai', 1);
-
-Đây là cái dữ liệu mẫu để test chức năng tạo hóa đơn từ giỏ hàng. giohang trc diachi
- */

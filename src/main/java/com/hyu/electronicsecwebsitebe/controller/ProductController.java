@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -55,8 +56,14 @@ public class ProductController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+    public ResponseEntity<Product> createProduct(@RequestBody Product product,@RequestParam("photo") MultipartFile file) {
         if (productService.existsById (product.getId ())) {
+            return ResponseEntity.badRequest ().build ();
+        }
+        try {
+            productService.uploadPhoto (product, file);
+        }
+        catch (Exception e) {
             return ResponseEntity.badRequest ().build ();
         }
         Product createdProduct = productService.createProduct (product);

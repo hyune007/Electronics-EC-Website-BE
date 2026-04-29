@@ -30,10 +30,8 @@ public class ChatController {
         message.setTimestamp(LocalDateTime.now());
         message.setSeen(false);
 
-        // 💾 1. lưu message
         messageRepo.save(message);
 
-        // 📦 2. update room
         ChatRoom room = roomRepo.findByRoomId(message.getRoomId())
                 .orElseGet(() -> {
                     ChatRoom r = new ChatRoom();
@@ -46,7 +44,6 @@ public class ChatController {
         room.setLastSender(message.getSenderName());
         room.setUpdatedAt(LocalDateTime.now());
 
-        // 👉 nếu customer gửi → tăng unread
         if ("CUSTOMER".equals(message.getSenderType())) {
             room.setUnreadCount(room.getUnreadCount() + 1);
         }
@@ -55,7 +52,6 @@ public class ChatController {
         }
         roomRepo.save(room);
 
-        // 📡 3. realtime
         messagingTemplate.convertAndSend("/topic/admin", message);
         messagingTemplate.convertAndSend("/topic/chat/" + message.getRoomId(), message);
     }

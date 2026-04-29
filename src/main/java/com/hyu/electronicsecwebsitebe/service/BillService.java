@@ -9,6 +9,8 @@ public interface BillService {
 
     List<Bill> getAllBills();
 
+    List<Bill> getBillsByEmployee(String employeeId);
+
     List<Bill> findByCustomerId(String customerId);
 
     Bill requestReturnBill(String billId, String reason, List<ReturnItem> returnItems);

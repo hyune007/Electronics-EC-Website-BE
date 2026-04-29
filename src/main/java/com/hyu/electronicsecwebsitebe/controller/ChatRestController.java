@@ -28,7 +28,6 @@ public class ChatRestController {
     @PutMapping("/seen/{roomId}")
     public void markAsSeen(@PathVariable String roomId) {
 
-        // update messages
         List<ChatMessage> messages = messageRepo.findByRoomIdOrderByTimestampAsc(roomId);
 
         for (ChatMessage msg : messages) {
@@ -39,7 +38,7 @@ public class ChatRestController {
 
         messageRepo.saveAll(messages);
 
-        // reset unreadCount
+
         ChatRoom room = roomRepo.findByRoomId(roomId).orElse(null);
         if (room != null) {
             room.setUnreadCount(0);
