@@ -1,8 +1,9 @@
 -- Role
 insert into vaitro (vaitro_id, vaitro_name)
 values ('ROLE_ADMIN', 'Quản trị viên'),
-       ('ROLE_EMPLOYEE', 'Nhân viên'),
-       ('ROLE_CUSTOMER', 'Khách hàng');
+       ('ROLE_EMPLOYEE', 'Nhan vien'),
+       ('ROLE_CUSTOMER', 'Khach hang'),
+       ('ROLE_SHIPPER', 'Shipper');
 
 -- Hang
 INSERT INTO hang (hang_id, hang_name)

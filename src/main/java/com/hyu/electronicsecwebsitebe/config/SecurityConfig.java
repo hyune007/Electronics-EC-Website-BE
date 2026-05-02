@@ -29,6 +29,7 @@ public class SecurityConfig {
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
     private static final String ROLE_EMPLOYEE = "ROLE_EMPLOYEE";
     private static final String ROLE_CUSTOMER = "ROLE_CUSTOMER";
+    private static final String ROLE_SHIPPER = "ROLE_SHIPPER";
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final RateLimitConfig rateLimitFilter;
 
@@ -72,7 +73,7 @@ public class SecurityConfig {
                         .requestMatchers (HttpMethod.GET, "/api/bill/customer/**")
                         .hasAnyAuthority (ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
                         .requestMatchers (HttpMethod.PUT, "/api/bill/update-status/**")
-                        .hasAnyAuthority (ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN)
+                        .hasAnyAuthority (ROLE_CUSTOMER, ROLE_EMPLOYEE, ROLE_ADMIN, ROLE_SHIPPER)
 
                         // CUSTOMER+
                         .requestMatchers (HttpMethod.GET, "/api/shopping-cart/customer/**")
