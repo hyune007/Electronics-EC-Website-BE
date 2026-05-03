@@ -54,18 +54,18 @@ public class ProductController {
         Product product = productService.findById (id);
         return ResponseEntity.ok (product);
     }
-
+//,@RequestParam("photo") MultipartFile file
     @PostMapping("/save")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product,@RequestParam("photo") MultipartFile file) {
+    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         if (productService.existsById (product.getId ())) {
             return ResponseEntity.badRequest ().build ();
         }
-        try {
-            productService.uploadPhoto (product, file);
-        }
-        catch (Exception e) {
-            return ResponseEntity.badRequest ().build ();
-        }
+//        try {
+//            productService.uploadPhoto (product, file);
+//        }
+//        catch (Exception e) {
+//            return ResponseEntity.badRequest ().build ();
+//        }
         Product createdProduct = productService.createProduct (product);
         return ResponseEntity.status (HttpStatus.CREATED).body (createdProduct);
     }
