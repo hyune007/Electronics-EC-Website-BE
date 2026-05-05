@@ -5,6 +5,7 @@ import com.hyu.electronicsecwebsitebe.repository.ProductRepository;
 import com.hyu.electronicsecwebsitebe.service.ProductService;
 import com.hyu.electronicsecwebsitebe.util.ProductSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,13 +40,18 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll(spec, pageable);
     }
 
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
     @Override
     public void uploadPhoto(Product product, MultipartFile file) {
-        String uploadDir = "src/main/resources/static/photos/products/"+product.getCategory().getId()+"/";
+        String Dir = uploadDir+product.getCategory().getId()+"/";
+        File dir = new File(uploadDir);
+        if (!dir.exists()) dir.mkdirs();
         String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
         String fileName = product.getId() + extension;
         try {
-            Path path = Paths.get(uploadDir + fileName);
+            Path path = Paths.get(Dir + fileName);
             Files.write(path, file.getBytes());
             System.out.printf(path.toString());
         }
