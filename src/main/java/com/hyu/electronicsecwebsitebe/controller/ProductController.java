@@ -55,20 +55,22 @@ public class ProductController {
         return ResponseEntity.ok (product);
     }
     @PostMapping("/save")
-    public ResponseEntity<Product> createProduct(@RequestPart("product") Product product, @RequestPart(value = "photo", required = false) MultipartFile file) {
-        String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-        product.setImage(product.getId() + extension);
+//    @RequestPart(value = "photo", required = false) MultipartFile file
+//    @RequestPart("product") Product product
+    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+//        String extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+//        product.setImage(product.getId() + extension);
 
         if (productService.existsById(product.getId())) {
             return ResponseEntity.badRequest().build();
         }
-        try {
-            if (file != null) {
-                productService.uploadPhoto(product, file);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+//        try {
+//            if (file != null) {
+//                productService.uploadPhoto(product, file);
+//            }
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().build();
+//        }
         Product createdProduct = productService.createProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
